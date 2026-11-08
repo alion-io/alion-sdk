@@ -18,6 +18,8 @@ const alion = new Alion();
 const { items } = await alion.searchCompanies({ industry: 'Fintech', country: 'DE', startup: true, limit: 10 });
 ```
 
+Frameworks: [LangChain](langchain) (`pip install langchain-alion`), [CrewAI](examples/crewai) (native MCP, no package needed), n8n ([`@alion-io/n8n-nodes-alion`](https://github.com/alion-io/n8n-nodes-alion)).
+
 ## Layout
 
 - `schema/tools.json`: snapshot of the server's tool list (`https://alion.io/mcp/tools`), the source of the generated types.
