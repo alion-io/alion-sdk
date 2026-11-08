@@ -1,17 +1,17 @@
-# alion
+# @alion-io/sdk
 
 The official JavaScript and TypeScript client for [Alion](https://alion.io/developers): a live graph of companies worldwide (what each one does, where it operates, its tech stack, funding rounds and investors, how fast it hires), startup investors, verified job postings with hiring and pay statistics, and people open to offers.
 
 Every tool of the [Alion MCP server](https://alion.io/developers/agents) is a typed method. It works in Node 18+, Bun, Deno, browsers and edge runtimes, and has no dependencies.
 
 ```bash
-npm install alion
+npm install @alion-io/sdk
 ```
 
 ## Free without a key
 
 ```ts
-import { Alion } from 'alion';
+import { Alion } from '@alion-io/sdk';
 
 const alion = new Alion(); // no key: the open address, free within a daily allowance
 
@@ -60,7 +60,7 @@ The server stops a search at row 100. Narrow the filters to reach further.
 Every failure is an `AlionError` with a machine-readable `code`:
 
 ```ts
-import { Alion, AlionError } from 'alion';
+import { Alion, AlionError } from '@alion-io/sdk';
 
 try {
   await alion.getCompany({ domain: 'stripe.com' });
@@ -119,7 +119,7 @@ The full list with every argument is in the types: your editor shows it as you t
 To give a model these tools directly, connect the MCP server instead of wrapping methods yourself:
 
 - remote clients (Claude, ChatGPT, Cursor, VS Code): `https://alion.io/mcp/open` without an account, `https://alion.io/mcp` with one;
-- clients that start a local command: [`npx -y alion-mcp`](https://www.npmjs.com/package/alion-mcp).
+- clients that start a local command: [`npx -y @alion-io/mcp`](https://www.npmjs.com/package/@alion-io/mcp).
 
 ## Links
 

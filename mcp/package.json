@@ -1,5 +1,5 @@
 {
-  "name": "alion-mcp",
+  "name": "@alion-io/mcp",
   "version": "0.1.0",
   "description": "The Alion MCP server as a local command (stdio) for Claude Desktop, Cursor, VS Code, Windsurf, Cline, Zed and agent frameworks: companies, startups, investors, job postings, pay statistics and people. Free without a key.",
   "keywords": [
@@ -41,6 +41,9 @@
     "node": ">=18"
   },
   "mcpName": "io.alion/alion",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "node --test test/offline.test.mjs",
     "test:live": "node --test test/live.test.mjs"

@@ -1,6 +1,6 @@
 name: Publish to npm
 
-# Tag js-vX.Y.Z publishes "alion", mcp-vX.Y.Z publishes "alion-mcp".
+# Tag js-vX.Y.Z publishes "@alion-io/sdk", mcp-vX.Y.Z publishes "@alion-io/mcp".
 # Trusted publishing: npm checks this workflow's OIDC identity, no token is stored anywhere.
 
 on:

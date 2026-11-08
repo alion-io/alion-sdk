@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// alion-mcp: the Alion MCP server for clients that start a local command (stdio).
+// @alion-io/mcp (command alion-mcp): the Alion MCP server for clients that start a local command (stdio).
 //
 // It relays every JSON-RPC message from stdin to the hosted server and writes its answers to stdout, one per line.
 // The hosted server is stateless (no session, no stream), so a relay this thin is the whole server: new tools on
 // alion.io reach you without updating this package.
 //
-//   npx -y alion-mcp                    free open address (https://alion.io/mcp/open), no account
-//   ALION_API_KEY=... npx -y alion-mcp  everything your account allows (https://alion.io/mcp)
+//   npx -y @alion-io/mcp                    free open address (https://alion.io/mcp/open), no account
+//   ALION_API_KEY=... npx -y @alion-io/mcp  everything your account allows (https://alion.io/mcp)
 //
 // Options (or environment variables):
 //   --api-key <key>   ALION_API_KEY    key from https://alion.io/developers/keys
@@ -38,7 +38,7 @@ if (process.argv.includes('--help') || process.argv.includes('-h')) {
         [
             `alion-mcp ${VERSION} - the Alion MCP server over stdio`,
             '',
-            'Usage: npx -y alion-mcp [--api-key KEY] [--scope jobs|companies|people] [--url URL] [--timeout SECONDS]',
+            'Usage: npx -y @alion-io/mcp [--api-key KEY] [--scope jobs|companies|people] [--url URL] [--timeout SECONDS]',
             '',
             'Without a key: the free open address (compact company and job searches, job postings, people, agent tools).',
             'With a key (https://alion.io/developers/keys): full company and investor profiles, statistics, everything.',
@@ -133,7 +133,7 @@ async function relay(line) {
         const list = Array.isArray(data) ? data : [data];
         for (const d of list) {
             if (d && d.jsonrpc && (d.id === null || d.id === undefined) && d.error) {
-                if (res.status === 401) d.error.message += apiKey ? '' : ' (or run alion-mcp without --url to use the free open address)';
+                if (res.status === 401) d.error.message += apiKey ? '' : ' (or run without --url to use the free open address)';
                 for (const m of messages) errorFor(m, d.error.code, d.error.message, d.error.data);
                 continue;
             }

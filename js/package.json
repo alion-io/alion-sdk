@@ -1,5 +1,5 @@
 {
-  "name": "alion",
+  "name": "@alion-io/sdk",
   "version": "0.1.0",
   "description": "Official Alion client: companies, startups, investors, job postings, hiring and pay statistics and people open to offers, as typed calls for code and AI agents. Free without a key for compact searches.",
   "keywords": [
@@ -57,6 +57,9 @@
     "LICENSE"
   ],
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=18"
   },

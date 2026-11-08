@@ -54,7 +54,7 @@ const sleep = (ms: number, signal?: AbortSignal) =>
  * The Alion client: every tool of the Alion MCP server as a typed method.
  *
  * ```ts
- * import { Alion } from 'alion';
+ * import { Alion } from '@alion-io/sdk';
  * const alion = new Alion();                       // no key: the free open address
  * const { items } = await alion.searchCompanies({ industry: 'Fintech', country: 'DE', startup: true, limit: 10 });
  * ```

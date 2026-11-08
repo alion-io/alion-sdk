@@ -1,4 +1,4 @@
-# alion-mcp
+# @alion-io/mcp
 
 The [Alion](https://alion.io/developers) MCP server as a local command, for clients and agent frameworks that start a process over stdio.
 
@@ -7,7 +7,7 @@ It gives your AI assistant live data on companies worldwide (what each one does,
 **Free without an account.** With an [API key](https://alion.io/developers/keys) you also get full company and investor profiles and the statistics.
 
 ```bash
-npx -y alion-mcp
+npx -y @alion-io/mcp
 ```
 
 Your client can take a remote URL? Then you don't need this package: connect `https://alion.io/mcp/open` (no account) or `https://alion.io/mcp` (signs you in with your Alion account).
@@ -21,7 +21,7 @@ Your client can take a remote URL? Then you don't need this package: connect `ht
   "mcpServers": {
     "alion": {
       "command": "npx",
-      "args": ["-y", "alion-mcp"]
+      "args": ["-y", "@alion-io/mcp"]
     }
   }
 }
@@ -34,7 +34,7 @@ With a key:
   "mcpServers": {
     "alion": {
       "command": "npx",
-      "args": ["-y", "alion-mcp"],
+      "args": ["-y", "@alion-io/mcp"],
       "env": { "ALION_API_KEY": "your key" }
     }
   }
@@ -52,7 +52,7 @@ The same block goes into `.cursor/mcp.json`, `~/.codeium/windsurf/mcp_config.jso
 ```json
 {
   "servers": {
-    "alion": { "type": "stdio", "command": "npx", "args": ["-y", "alion-mcp"] }
+    "alion": { "type": "stdio", "command": "npx", "args": ["-y", "@alion-io/mcp"] }
   }
 }
 ```
@@ -60,12 +60,12 @@ The same block goes into `.cursor/mcp.json`, `~/.codeium/windsurf/mcp_config.jso
 ## Claude Code
 
 ```bash
-claude mcp add alion -- npx -y alion-mcp
+claude mcp add alion -- npx -y @alion-io/mcp
 ```
 
 ## Agent frameworks
 
-Any framework with an MCP stdio client works: the OpenAI Agents SDK (`MCPServerStdio`), LangChain (`langchain-mcp-adapters`), the Claude Agent SDK, LlamaIndex, CrewAI, Mastra. Command `npx`, arguments `["-y", "alion-mcp"]`.
+Any framework with an MCP stdio client works: the OpenAI Agents SDK (`MCPServerStdio`), LangChain (`langchain-mcp-adapters`), the Claude Agent SDK, LlamaIndex, CrewAI, Mastra. Command `npx`, arguments `["-y", "@alion-io/mcp"]`.
 
 ## Options
 
@@ -93,6 +93,6 @@ The hosted server is stateless, so this package is a thin relay: each JSON-RPC m
 ## Links
 
 - Docs: https://alion.io/developers
-- JavaScript and TypeScript client: [`alion`](https://www.npmjs.com/package/alion)
+- JavaScript and TypeScript client: [`@alion-io/sdk`](https://www.npmjs.com/package/@alion-io/sdk)
 - Source and issues: https://github.com/alion-io/alion-sdk
 - MIT license
