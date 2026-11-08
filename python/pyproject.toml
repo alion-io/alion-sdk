@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "alion"
+dynamic = ["version"]
+description = "Official Alion client: companies, startups, investors, job postings, hiring and pay statistics and people open to offers, as typed calls for code and AI agents. Free without a key for compact searches."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+authors = [{ name = "Alion", email = "info@alion.io" }]
+keywords = [
+  "alion", "company data", "company enrichment", "startups", "investors", "venture capital",
+  "funding rounds", "job postings", "jobs api", "labor market", "salary data", "tech stack",
+  "lookalike companies", "sales prospecting", "mcp", "model context protocol", "ai agents", "llm tools",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Internet :: WWW/HTTP",
+  "Topic :: Office/Business",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
+]
+dependencies = ['typing_extensions>=4.7; python_version < "3.11"']
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "mypy>=1.10"]
+
+[project.urls]
+Homepage = "https://alion.io/developers"
+Documentation = "https://alion.io/developers"
+Source = "https://github.com/alion-io/alion-sdk"
+Issues = "https://github.com/alion-io/alion-sdk/issues"
+
+[tool.hatch.version]
+path = "src/alion/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/alion"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/alion", "tests", "README.md", "LICENSE", "pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["live: calls https://alion.io (run with -m live)"]
+addopts = "-m 'not live'"
+
+[tool.mypy]
+python_version = "3.9"
+strict = true

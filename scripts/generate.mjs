@@ -157,7 +157,8 @@ function pyObject(s, ctx, name) {
 }
 
 const PY_KEYWORDS = new Set(['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield']);
-const pyDoc = (t) => String(t).replace(/\\/g, '\\\\').replace(/"""/g, '\\"\\"\\"').replace(/\s+/g, ' ').trim();
+// (every quote escaped: a description ending in a quote cannot close the docstring early)
+const pyDoc = (t) => String(t).replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\s+/g, ' ').trim();
 
 // emitters
 
@@ -201,36 +202,75 @@ function emitPy(data) {
     const names = new Set();
     for (const t of tools) {
         const P = pascal(t.name);
-        pyObject(t.inputSchema && Object.keys(t.inputSchema.properties || {}).length ? t.inputSchema : { properties: { _: {} } }, { names, blocks, input: true }, P + 'Args');
-        if (t.outputSchema && Object.keys(t.outputSchema.properties || {}).length) pyObject(t.outputSchema, { names, blocks, input: false }, P + 'Result');
+        if (Object.keys(t.inputSchema?.properties || {}).length) pyObject(t.inputSchema, { names, blocks, input: true }, P + 'Args');
+        else { names.add(P + 'Args'); blocks.push(`class ${P}Args(TypedDict, total=False):\n    """${t.name} takes no arguments."""\n`); }
+        if (Object.keys(t.outputSchema?.properties || {}).length) pyObject(t.outputSchema, { names, blocks, input: false }, P + 'Result');
         else { names.add(P + 'Result'); blocks.push(`${P}Result = Dict[str, Any]\n`); }
     }
-    let out = `# ${HEADER(SOURCE, data.server)}\n# fmt: off\n# ruff: noqa\n\nfrom __future__ import annotations\n\nimport sys\nfrom typing import Any, Dict, List, Optional, Union\n\nif sys.version_info >= (3, 11):\n    from typing import Literal, NotRequired, Required, TypedDict\nelse:\n    from typing_extensions import Literal, NotRequired, Required, TypedDict\n\n\n`;
+    const lines = [
+        `# ${HEADER(SOURCE, data.server)}`,
+        '# fmt: off',
+        '# ruff: noqa',
+        '',
+        'from __future__ import annotations',
+        '',
+        'import sys',
+        'from typing import Any, Dict, List, Optional, Union',
+        '',
+        'if sys.version_info >= (3, 11):',
+        '    from typing import Literal, Required, TypedDict',
+        'else:',
+        '    from typing_extensions import Literal, Required, TypedDict',
+        '',
+        '',
+    ];
+    let out = lines.join('\n') + '\n';
     out += blocks.join('\n\n') + '\n\n';
-    out += `TOOL_NAMES = ${pyList(tools.map((t) => t.name))}\n\n`;
+    out += `TOOL_NAMES = (${tools.map((t) => JSON.stringify(t.name)).join(', ')},)\n\n`;
     out += `PAGED_TOOLS = frozenset(${pyList(tools.filter((t) => t.outputSchema?.properties?.next_cursor && t.inputSchema?.properties?.cursor).map((t) => t.name))})\n\n`;
-    out += `READ_ONLY_TOOLS = frozenset(${pyList(tools.filter((t) => t.annotations?.readOnlyHint).map((t) => t.name))})\n\n`;
-    out += `TOOLS = {\n${tools.map((t) => `    ${JSON.stringify(t.name)}: {"method": ${JSON.stringify(snake(t.name))}, "title": ${JSON.stringify(t.title || '')}, "required": ${pyList(t.inputSchema?.required || [])}},`).join('\n')}\n}\n`;
+    out += `READ_ONLY_TOOLS = frozenset(${pyList(tools.filter((t) => t.annotations?.readOnlyHint).map((t) => t.name))})\n`;
     return out;
 }
 
-const snake = (s) => s;
 const pyList = (a) => `[${a.map((x) => JSON.stringify(x)).join(', ')}]`;
 
 function emitPyMethods(data) {
-    // the sync and async tool methods, as mixins over call() / acall()
-    let sync = `# ${HEADER(SOURCE, data.server)}\n# fmt: off\n# ruff: noqa\n\nfrom __future__ import annotations\n\nfrom typing import Any, Optional, TYPE_CHECKING\n\nfrom . import _types as t\n\nif TYPE_CHECKING:\n    from typing_extensions import Unpack\n\n\nclass SyncTools:\n    def call(self, name: str, args: Optional[dict] = None, *, timeout: Optional[float] = None) -> Any:  # pragma: no cover\n        raise NotImplementedError\n\n`;
-    let asyn = `class AsyncTools:\n    async def call(self, name: str, args: Optional[dict] = None, *, timeout: Optional[float] = None) -> Any:  # pragma: no cover\n        raise NotImplementedError\n\n`;
+    // the sync and async tool methods, as mixins over call()
+    const head = [
+        `# ${HEADER(SOURCE, data.server)}`,
+        '# fmt: off',
+        '# ruff: noqa',
+        '',
+        'from __future__ import annotations',
+        '',
+        'import sys',
+        'from typing import TYPE_CHECKING, Any, Dict, Optional',
+        '',
+        'from . import _types as t',
+        '',
+        'if TYPE_CHECKING:',
+        '    if sys.version_info >= (3, 11):',
+        '        from typing import Unpack',
+        '    else:',
+        '        from typing_extensions import Unpack',
+        '',
+        '',
+    ].join('\n') + '\n';
+    const callSig = 'name: str, args: Optional[Dict[str, Any]] = None, *, timeout: Optional[float] = None';
+    let sync = `class SyncTools:\n    """Every tool of the Alion MCP server as a method. Arguments are keyword arguments named as in the tool's schema."""\n\n    def call(self, ${callSig}) -> Any:  # pragma: no cover\n        raise NotImplementedError\n\n`;
+    let asyn = `class AsyncTools:\n    """Every tool of the Alion MCP server as an async method. Arguments are keyword arguments named as in the tool's schema."""\n\n    async def call(self, ${callSig}) -> Any:  # pragma: no cover\n        raise NotImplementedError\n\n`;
     for (const tool of data.tools) {
+        if (tool.inputSchema?.properties?.timeout) throw new Error(`${tool.name} has an argument named timeout: the Python methods use that name for the call timeout`);
+        if (!/^[a-z_][a-z0-9_]*$/.test(tool.name) || PY_KEYWORDS.has(tool.name)) throw new Error(`${tool.name} is not a valid Python method name`);
         const P = pascal(tool.name);
         const hasArgs = Object.keys(tool.inputSchema?.properties || {}).length > 0;
         const docText = pyDoc(tool.description || tool.title || tool.name);
-        const sig = hasArgs ? `self, *, timeout: Optional[float] = None, **args: "Unpack[t.${P}Args]"` : `self, *, timeout: Optional[float] = None`;
+        const sig = hasArgs ? `self, *, timeout: Optional[float] = None, **args: Unpack[t.${P}Args]` : 'self, *, timeout: Optional[float] = None';
         const pass = hasArgs ? 'dict(args)' : '{}';
-        sync += `    def ${tool.name}(${sig}) -> "t.${P}Result":\n        """${docText}"""\n        return self.call(${JSON.stringify(tool.name)}, ${pass}, timeout=timeout)\n\n`;
-        asyn += `    async def ${tool.name}(${sig}) -> "t.${P}Result":\n        """${docText}"""\n        return await self.call(${JSON.stringify(tool.name)}, ${pass}, timeout=timeout)\n\n`;
+        sync += `    def ${tool.name}(${sig}) -> t.${P}Result:\n        """${docText}"""\n        return self.call(${JSON.stringify(tool.name)}, ${pass}, timeout=timeout)  # type: ignore[no-any-return]\n\n`;
+        asyn += `    async def ${tool.name}(${sig}) -> t.${P}Result:\n        """${docText}"""\n        return await self.call(${JSON.stringify(tool.name)}, ${pass}, timeout=timeout)  # type: ignore[no-any-return]\n\n`;
     }
-    return sync.replace(/\n\n$/, '\n') + '\n\n' + asyn.replace(/\n\n$/, '\n');
+    return head + sync.replace(/\n\n$/, '\n') + '\n\n' + asyn.replace(/\n\n$/, '\n');
 }
 
 const data = await load();

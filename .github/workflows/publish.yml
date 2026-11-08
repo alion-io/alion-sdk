@@ -1,13 +1,15 @@
-name: Publish to npm
+name: Publish
 
-# Tag js-vX.Y.Z publishes "@alion-io/sdk", mcp-vX.Y.Z publishes "@alion-io/mcp".
-# Trusted publishing: npm checks this workflow's OIDC identity, no token is stored anywhere.
+# Tag js-vX.Y.Z publishes "@alion-io/sdk" and mcp-vX.Y.Z publishes "@alion-io/mcp" to npm;
+# tag py-vX.Y.Z publishes "alion" to PyPI.
+# Trusted publishing: npm and PyPI check this workflow's OIDC identity, no token is stored anywhere.
 
 on:
   push:
     tags:
       - 'js-v*'
       - 'mcp-v*'
+      - 'py-v*'
 
 permissions:
   contents: read
@@ -15,6 +17,7 @@ permissions:
 
 jobs:
   publish:
+    if: ${{ !startsWith(github.ref_name, 'py-v') }}
     runs-on: ubuntu-latest
     environment: npm
     steps:
@@ -46,3 +49,27 @@ jobs:
         working-directory: ${{ steps.pkg.outputs.dir }}
       - run: npm publish --provenance --access public
         working-directory: ${{ steps.pkg.outputs.dir }}
+
+  pypi:
+    if: ${{ startsWith(github.ref_name, 'py-v') }}
+    runs-on: ubuntu-latest
+    environment: pypi
+    defaults:
+      run:
+        working-directory: python
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Tag equals the package version
+        run: |
+          v=$(python -c "import re; print(re.search(r'\"(.+)\"', open('src/alion/_version.py').read()).group(1))")
+          test "$v" = "${GITHUB_REF_NAME#py-v}" || { echo "_version.py has $v, tag says ${GITHUB_REF_NAME#py-v}"; exit 1; }
+      - run: python -m pip install --upgrade pip build
+      - run: python -m pip install -e '.[dev]'
+      - run: python -m pytest
+      - run: python -m build
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/dist

@@ -53,6 +53,31 @@ jobs:
       - run: npm run test:live
         if: ${{ inputs.live }}
 
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
+    defaults:
+      run:
+        working-directory: python
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install --upgrade pip build
+      - run: python -m pip install -e '.[dev]'
+      - run: python -m pytest
+      - run: python -m mypy --warn-unused-ignores tests/typecheck_consumer.py src/alion
+      - run: python -m pytest -m live
+        if: ${{ inputs.live }}
+      - name: Wheel and sdist build and install
+        run: |
+          python -m build
+          python -m pip install --force-reinstall dist/*.whl
+          cd / && python -c "import alion; print(alion.__version__, len(alion.TOOL_NAMES))"
+
   generated:
     runs-on: ubuntu-latest
     steps:
@@ -60,5 +85,5 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
-      - name: Generated types match the schema snapshot
+      - name: Generated types (TypeScript and Python) match the schema snapshot
         run: node scripts/generate.mjs --offline && git diff --exit-code
