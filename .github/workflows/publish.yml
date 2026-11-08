@@ -78,7 +78,8 @@ jobs:
   langchain:
     if: ${{ startsWith(github.ref_name, 'lc-v') }}
     runs-on: ubuntu-latest
-    environment: pypi
+    # (its own environment: PyPI matches a token to one trusted publisher, and the alion project already uses pypi)
+    environment: pypi-langchain
     defaults:
       run:
         working-directory: langchain
