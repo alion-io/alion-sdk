@@ -1,0 +1,51 @@
+{
+  "name": "alion-mcp",
+  "version": "0.1.0",
+  "description": "The Alion MCP server as a local command (stdio) for Claude Desktop, Cursor, VS Code, Windsurf, Cline, Zed and agent frameworks: companies, startups, investors, job postings, pay statistics and people. Free without a key.",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model context protocol",
+    "alion",
+    "company data",
+    "startups",
+    "investors",
+    "job postings",
+    "jobs",
+    "salary data",
+    "claude",
+    "cursor",
+    "ai agents"
+  ],
+  "homepage": "https://alion.io/developers",
+  "bugs": {
+    "url": "https://github.com/alion-io/alion-sdk/issues",
+    "email": "info@alion.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alion-io/alion-sdk.git",
+    "directory": "mcp"
+  },
+  "license": "MIT",
+  "author": "Alion <info@alion.io> (https://alion.io)",
+  "bin": {
+    "alion-mcp": "bin/alion-mcp.js"
+  },
+  "files": [
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "mcpName": "io.alion/alion",
+  "scripts": {
+    "test": "node --test test/offline.test.mjs",
+    "test:live": "node --test test/live.test.mjs"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.0"
+  }
+}

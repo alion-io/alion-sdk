@@ -1,0 +1,74 @@
+{
+  "name": "alion",
+  "version": "0.1.0",
+  "description": "Official Alion client: companies, startups, investors, job postings, hiring and pay statistics and people open to offers, as typed calls for code and AI agents. Free without a key for compact searches.",
+  "keywords": [
+    "alion",
+    "company data",
+    "company enrichment",
+    "startups",
+    "investors",
+    "venture capital",
+    "funding rounds",
+    "job postings",
+    "jobs api",
+    "labor market",
+    "salary data",
+    "tech stack",
+    "lookalike companies",
+    "sales prospecting",
+    "mcp",
+    "model context protocol",
+    "ai agents",
+    "llm tools"
+  ],
+  "homepage": "https://alion.io/developers",
+  "bugs": {
+    "url": "https://github.com/alion-io/alion-sdk/issues",
+    "email": "info@alion.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alion-io/alion-sdk.git",
+    "directory": "js"
+  },
+  "license": "MIT",
+  "author": "Alion <info@alion.io> (https://alion.io)",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node scripts/clean.mjs && tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && node scripts/cjs-marker.mjs",
+    "typecheck": "tsc -p tsconfig.esm.json --noEmit",
+    "test": "node --test test/offline.test.mjs",
+    "test:live": "node --test test/live.test.mjs",
+    "prepublishOnly": "npm run build && npm test && npm run test:types",
+    "test:types": "tsc --noEmit --strict --module nodenext --moduleResolution nodenext --target es2022 --lib es2022,dom test/types/consumer.ts test/types/readme.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}

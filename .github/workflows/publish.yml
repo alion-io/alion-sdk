@@ -1,0 +1,48 @@
+name: Publish to npm
+
+# Tag js-vX.Y.Z publishes "alion", mcp-vX.Y.Z publishes "alion-mcp".
+# Trusted publishing: npm checks this workflow's OIDC identity, no token is stored anywhere.
+
+on:
+  push:
+    tags:
+      - 'js-v*'
+      - 'mcp-v*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: Trusted publishing needs npm 11.5.1 or newer
+        run: npm install -g npm@^11.5.1
+      - name: Pick the package from the tag
+        id: pkg
+        run: |
+          case "$GITHUB_REF_NAME" in
+            js-v*)  echo "dir=js"  >> "$GITHUB_OUTPUT"; echo "version=${GITHUB_REF_NAME#js-v}"  >> "$GITHUB_OUTPUT" ;;
+            mcp-v*) echo "dir=mcp" >> "$GITHUB_OUTPUT"; echo "version=${GITHUB_REF_NAME#mcp-v}" >> "$GITHUB_OUTPUT" ;;
+            *) echo "unknown tag $GITHUB_REF_NAME"; exit 1 ;;
+          esac
+      - name: Tag equals package.json version
+        working-directory: ${{ steps.pkg.outputs.dir }}
+        run: |
+          v=$(node -p "require('./package.json').version")
+          test "$v" = "${{ steps.pkg.outputs.version }}" || { echo "package.json has $v, tag says ${{ steps.pkg.outputs.version }}"; exit 1; }
+      - run: npm ci
+        working-directory: ${{ steps.pkg.outputs.dir }}
+      - run: npm run build --if-present
+        working-directory: ${{ steps.pkg.outputs.dir }}
+      - run: npm test
+        working-directory: ${{ steps.pkg.outputs.dir }}
+      - run: npm publish --provenance --access public
+        working-directory: ${{ steps.pkg.outputs.dir }}
