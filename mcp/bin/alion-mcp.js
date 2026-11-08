@@ -68,6 +68,9 @@ const log = (msg) => process.stderr.write(`alion-mcp: ${msg}\n`);
 log(`relaying to ${url}${apiKey ? ' with an API key' : ' (no key: the free open address)'}`);
 
 let protocolVersion = '';
+// the app on the other end of stdin, from its initialize (clientInfo): it goes into the User-Agent beside ours, so the
+// hosted server's journal tells Claude Desktop from Zed from a test run
+let clientName = '';
 let pending = 0;
 let closing = false;
 const out = (obj) => process.stdout.write(JSON.stringify(obj) + '\n');
@@ -89,11 +92,15 @@ async function relay(line) {
     // (responses from the client to server requests: the hosted server sends none, so there is nothing to relay)
     const messages = Array.isArray(msg) ? msg : [msg];
     if (messages.every((m) => m && m.method === undefined)) return;
+    for (const m of messages) {
+        const ci = m && m.method === 'initialize' && m.params && m.params.clientInfo;
+        if (ci && typeof ci.name === 'string' && ci.name) clientName = `${ci.name}/${ci.version || ''}`.replace(/[^\w.@/+-]+/g, '-').replace(/\/$/, '').slice(0, 48);
+    }
 
     const headers = {
         'Content-Type': 'application/json',
         Accept: 'application/json, text/event-stream',
-        'User-Agent': `alion-mcp/${VERSION} node/${process.versions.node}`,
+        'User-Agent': `alion-mcp/${VERSION} node/${process.versions.node}` + (clientName ? ` ${clientName}` : ''),
     };
     if (protocolVersion) headers['MCP-Protocol-Version'] = protocolVersion;
     if (apiKey) headers.Authorization = `Bearer ${apiKey}`;

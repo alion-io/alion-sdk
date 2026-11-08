@@ -39,7 +39,7 @@ def test_list_tools():
 
 def test_async():
     async def main():
-        async with AsyncAlion(api_key="") as a:
+        async with AsyncAlion(api_key="", app_name="alion-sdk-tests") as a:
             r = await a.resolve_company(domain="openai.com")
         assert r["match"]["name"] == "OpenAI"
 

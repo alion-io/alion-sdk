@@ -53,7 +53,7 @@ test('relays requests, skips notifications, keeps ids; open address without a ke
         assert.equal(r.out[0].id, 1);
         assert.equal(seen[0].url, '/mcp/open');
         assert.equal(seen[0].headers.authorization, undefined);
-        assert.match(seen[0].headers['user-agent'], /^alion-mcp\//);
+        assert.match(seen[0].headers['user-agent'], /^alion-mcp\/\S+ node\/\S+ t\/1$/, 'the client app is named after ours');
 
         const r2 = await run({ ALION_BASE_URL: url, ALION_API_KEY: 'k_1' }, [
             JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' }),

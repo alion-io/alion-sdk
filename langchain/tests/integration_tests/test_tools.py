@@ -63,8 +63,8 @@ class TestSearchJobsLive(_Live):
 
 
 def test_answers_are_real() -> None:
-    tools = {t.alion_tool: t for t in AlionToolkit(api_key=None).get_tools()}  # type: ignore[attr-defined]
+    tools = {t.alion_tool: t for t in AlionToolkit(api_key=None, app_name="langchain-alion-tests").get_tools()}  # type: ignore[attr-defined]
     resolved = tools["resolve_company"].invoke({"domain": "stripe.com"})
     assert '"Stripe"' in resolved
-    paid = AlionToolkit(api_key=None, include=["get_company"]).get_tools()[0].invoke({"domain": "stripe.com"})
+    paid = AlionToolkit(api_key=None, include=["get_company"], app_name="langchain-alion-tests").get_tools()[0].invoke({"domain": "stripe.com"})
     assert "ALION_API_KEY" in paid
