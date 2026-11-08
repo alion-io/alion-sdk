@@ -273,8 +273,90 @@ function emitPyMethods(data) {
     return head + sync.replace(/\n\n$/, '\n') + '\n\n' + asyn.replace(/\n\n$/, '\n');
 }
 
+// LangChain: pydantic input schemas and one BaseTool subclass per tool, for the tools an agent framework should get
+// (companies, investors, jobs, markets, checks; the people and messaging tools stay out: privacy)
+const LANGCHAIN_TOOLS = ['search_companies', 'get_company', 'similar_companies', 'resolve_company', 'check_counterparty', 'search_investors', 'get_investor', 'search_jobs', 'get_job', 'market_stats'];
+
+function pydType(s) {
+    if (!s || typeof s !== 'object') return 'Any';
+    if (s.enum) return `Literal[${s.enum.map((v) => (v === null ? 'None' : JSON.stringify(v))).join(', ')}]`;
+    const types = (Array.isArray(s.type) ? s.type : [s.type]).filter((t) => t && t !== 'null');
+    const t = types[0];
+    if (types.length > 1) return 'Any';
+    switch (t) {
+        case 'string': return 'str';
+        case 'integer': return 'int';
+        case 'number': return 'float';
+        case 'boolean': return 'bool';
+        case 'array': return `list[${s.items ? pydType(s.items) : 'Any'}]`;
+        case 'object': return 'dict[str, Any]';
+        default: return 'Any';
+    }
+}
+
+function emitLangchain(data) {
+    const out = [
+        `# ${HEADER(SOURCE, data.server)}`,
+        '# fmt: off',
+        '# ruff: noqa',
+        '',
+        'from __future__ import annotations',
+        '',
+        'from typing import Any, Literal, Optional',
+        '',
+        'from pydantic import BaseModel, Field',
+        '',
+        'from ._base import AlionBaseTool',
+        '',
+        '',
+    ];
+    const classes = [];
+    for (const name of LANGCHAIN_TOOLS) {
+        const t = data.tools.find((x) => x.name === name);
+        if (!t) throw new Error(`langchain: the server no longer lists ${name}`);
+        const P = pascal(name);
+        const props = t.inputSchema?.properties || {};
+        const req = new Set(t.inputSchema?.required || []);
+        out.push(`class ${P}Input(BaseModel):`);
+        out.push(`    """Arguments of Alion's ${name}."""`);
+        out.push('');
+        const names = Object.keys(props);
+        if (!names.length) out.push('    pass');
+        for (const k of names) {
+            if (!/^[a-z_][a-z0-9_]*$/.test(k) || PY_KEYWORDS.has(k)) throw new Error(`langchain: ${name}.${k} is not a valid Python field name`);
+            const s = props[k];
+            const extra = [];
+            if (s.minimum !== undefined) extra.push(`ge=${s.minimum}`);
+            if (s.maximum !== undefined) extra.push(`le=${s.maximum}`);
+            const desc = JSON.stringify(String(s.description || '').replace(/\s+/g, ' ').trim());
+            const type = pydType(s);
+            if (req.has(k)) out.push(`    ${k}: ${type} = Field(description=${desc}${extra.length ? ', ' + extra.join(', ') : ''})`);
+            else out.push(`    ${k}: Optional[${type}] = Field(default=None, description=${desc}${extra.length ? ', ' + extra.join(', ') : ''})`);
+        }
+        out.push('', '');
+        const desc = JSON.stringify(String(t.description || t.title || name).replace(/\s+/g, ' ').trim());
+        out.push(`class Alion${P}(AlionBaseTool):`);
+        out.push(`    """${pyDoc(t.title || name)}: Alion's ${name} as a LangChain tool."""`);
+        out.push('');
+        out.push(`    name: str = "alion_${name}"`);
+        out.push(`    description: str = ${desc}`);
+        out.push(`    args_schema: type[BaseModel] = ${P}Input`);
+        out.push(`    alion_tool: str = ${JSON.stringify(name)}`);
+        out.push('', '');
+        classes.push(`Alion${P}`);
+    }
+    out.push(`ALL_TOOLS: list[type[AlionBaseTool]] = [${classes.join(', ')}]`);
+    out.push('');
+    out.push(`__all__ = [${[...classes, ...LANGCHAIN_TOOLS.map((n) => pascal(n) + 'Input'), 'ALL_TOOLS'].map((x) => JSON.stringify(x)).join(', ')}]`);
+    return out.join('\n') + '\n';
+}
+
 const data = await load();
 writeFileSync(join(ROOT, 'js', 'src', 'tools.generated.ts'), emitTs(data));
+// (the LangChain package joins once langchain/pyproject.toml exists)
+if (existsSync(join(ROOT, 'langchain', 'pyproject.toml'))) {
+    writeFileSync(join(ROOT, 'langchain', 'src', 'langchain_alion', '_tools.py'), emitLangchain(data));
+}
 // (the Python package joins once python/pyproject.toml exists)
 if (existsSync(join(ROOT, 'python', 'pyproject.toml'))) {
     const pyDir = join(ROOT, 'python', 'src', 'alion');

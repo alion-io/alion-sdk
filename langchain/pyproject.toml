@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "langchain-alion"
+dynamic = ["version"]
+description = "LangChain tools for Alion: companies, startups, investors, verified job postings and pay statistics for agents. Free without a key for compact searches."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Alion", email = "info@alion.io" }]
+keywords = ["langchain", "langgraph", "alion", "tools", "agents", "company data", "startups", "investors", "job postings", "sales prospecting", "enrichment"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Typing :: Typed",
+]
+dependencies = ["langchain-core>=1.0,<2", "alion>=0.1.0"]
+
+[project.optional-dependencies]
+dev = ["langchain-tests>=1.1", "pytest>=8", "pytest-asyncio>=0.23", "mypy>=1.10"]
+
+[project.urls]
+Homepage = "https://alion.io/developers"
+Documentation = "https://github.com/alion-io/alion-sdk/tree/main/langchain#readme"
+Source = "https://github.com/alion-io/alion-sdk"
+Issues = "https://github.com/alion-io/alion-sdk/issues"
+
+[tool.hatch.version]
+path = "src/langchain_alion/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/langchain_alion"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/langchain_alion", "tests", "README.md", "LICENSE", "pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit_tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.mypy]
+strict = true
