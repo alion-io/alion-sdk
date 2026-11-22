@@ -26,7 +26,9 @@
     "public contracts",
     "tenders",
     "company events",
-    "buying signals"
+    "buying signals",
+    "vercel ai sdk",
+    "ai sdk tools"
   ],
   "homepage": "https://alion.io/developers",
   "bugs": {
@@ -58,6 +60,16 @@
         "default": "./dist/cjs/index.js"
       }
     },
+    "./ai-sdk": {
+      "import": {
+        "types": "./dist/esm/ai-sdk.d.ts",
+        "default": "./dist/esm/ai-sdk.js"
+      },
+      "require": {
+        "types": "./dist/cjs/ai-sdk.d.ts",
+        "default": "./dist/cjs/ai-sdk.js"
+      }
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -81,6 +93,16 @@
     "test:types": "tsc --noEmit --strict --module nodenext --moduleResolution nodenext --target es2022 --lib es2022,dom test/types/consumer.ts test/types/readme.ts"
   },
   "devDependencies": {
-    "typescript": "^5.6.0"
+    "ai": "^7.0.179",
+    "typescript": "^5.6.0",
+    "zod": "^4.6.7"
+  },
+  "peerDependencies": {
+    "ai": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "ai": {
+      "optional": true
+    }
   }
 }
