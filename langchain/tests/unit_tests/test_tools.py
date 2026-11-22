@@ -22,6 +22,11 @@ EXAMPLES: dict[str, dict[str, Any]] = {
     "search_jobs": {"role": "Data Engineer", "country": "PL", "work_mode": "remote", "limit": 5},
     "get_job": {"url": "https://alion.io/job/example"},
     "market_stats": {"role": "Backend", "country": "US"},
+    "get_company_money": {"company": "openai.com", "direction": "in", "limit": 10},
+    "get_company_ownership": {"company": "stripe.com"},
+    "get_company_record": {"company": "stripe.com"},
+    "search_company_events": {"type": "funding_round", "country": "DE", "since": "7d", "limit": 5},
+    "search_contracts": {"company": "accenture.com", "limit": 5},
 }
 
 
