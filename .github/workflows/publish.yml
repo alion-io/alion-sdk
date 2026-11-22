@@ -23,10 +23,11 @@ jobs:
     environment: npm
     steps:
       - uses: actions/checkout@v5
+      # (no registry-url: setup-node would write a placeholder NODE_AUTH_TOKEN into .npmrc, and npm sent it instead of the
+      # OIDC exchange - E404 on the first CI release, js-v0.2.0, 2026-11-23)
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
       - name: Trusted publishing needs npm 11.5.1 or newer
         run: npm install -g npm@^11.5.1
       - name: Pick the package from the tag
