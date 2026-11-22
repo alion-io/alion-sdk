@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/alion-io/alion-sdk/discussions
+    about: How to do something, which package to pick, what you would like the data to have.
+  - name: API docs
+    url: https://alion.io/developers/docs
+    about: Every method, argument and price.

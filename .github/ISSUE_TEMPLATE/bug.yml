@@ -1,0 +1,30 @@
+name: Bug in a package
+description: An SDK, the CLI, the MCP server or an agent adapter does something wrong.
+labels: [bug]
+body:
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options: ['@alion-io/sdk (JS/TS)', 'alion (Python)', 'langchain-alion', '@alion-io/mcp', 'CLI', 'Vercel AI SDK tools', 'LlamaIndex tools']
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version and runtime
+      placeholder: '@alion-io/sdk 0.3.0, Node 22'
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What you ran and what happened
+      description: The smallest code or command that shows it, and the output. Leave your API key out.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected

@@ -101,3 +101,28 @@ jobs:
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: langchain/dist
+
+  release:
+    # a GitHub release for the tag, its notes taken from the package's CHANGELOG.md section of that version; runs once the
+    # publishing job of the tag has passed (the other jobs are skipped, which needs does not count as a failure)
+    needs: [publish, pypi, langchain]
+    if: ${{ !failure() && !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          case "$GITHUB_REF_NAME" in
+            js-v*)  dir=js;        name='@alion-io/sdk' ;;
+            mcp-v*) dir=mcp;       name='@alion-io/mcp' ;;
+            py-v*)  dir=python;    name='alion (PyPI)' ;;
+            lc-v*)  dir=langchain; name='langchain-alion (PyPI)' ;;
+          esac
+          v="${GITHUB_REF_NAME#*-v}"
+          awk -v v="$v" '/^## /{p = (index($0, "## " v " ") == 1 || $0 == "## " v); next} p' "$dir/CHANGELOG.md" > notes.md
+          test -s notes.md || echo "See $dir/CHANGELOG.md." > notes.md
+          gh release create "$GITHUB_REF_NAME" --title "$name $v" --notes-file notes.md --verify-tag

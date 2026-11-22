@@ -1,0 +1,24 @@
+name: Wrong or missing data
+description: A company, a figure, an event or a posting is wrong, out of date or missing.
+labels: [data]
+body:
+  - type: input
+    id: company
+    attributes:
+      label: Company or posting
+      description: Its domain or its alion.io link.
+      placeholder: https://alion.io/company/...
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What is wrong
+      description: The field, what Alion says, and what is true. A source link helps us fix it for everyone.
+    validations:
+      required: true
+  - type: input
+    id: call
+    attributes:
+      label: The call that returned it (optional)
+      placeholder: get_company(company="acme.com", slices="money")

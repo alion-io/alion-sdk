@@ -1,0 +1,15 @@
+name: Feature or data request
+description: A method, an argument, a framework adapter or a kind of data you need.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: What you are trying to do
+      description: The task, not the solution. "Alert me when a SaaS company in my CRM opens an office in Germany."
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help

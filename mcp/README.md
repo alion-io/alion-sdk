@@ -1,5 +1,7 @@
 # @alion-io/mcp
 
+[![npm](https://img.shields.io/npm/v/@alion-io/mcp)](https://www.npmjs.com/package/@alion-io/mcp) [![CI](https://github.com/alion-io/alion-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/alion-io/alion-sdk/actions/workflows/ci.yml)
+
 The [Alion](https://alion.io/developers) MCP server as a local command, for clients and agent frameworks that start a process over stdio.
 
 It gives your AI assistant live data on companies worldwide (what each one does, where it operates, its tech stack, funding rounds and investors, how fast it hires), startup investors, verified job postings with hiring and pay statistics, and people open to offers.

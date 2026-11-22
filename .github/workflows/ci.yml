@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  schedule:
+    # (every Monday: the free examples against https://alion.io, so a change on the server that breaks them shows)
+    - cron: '17 6 * * 1'
   workflow_dispatch:
     inputs:
       live:
@@ -131,3 +134,31 @@ jobs:
           node-version: 22
       - name: Generated types (TypeScript and Python) match the schema snapshot
         run: node scripts/generate.mjs --offline && git diff --exit-code
+
+  examples:
+    # the free examples (no key) against https://alion.io: weekly and on demand, never on every push
+    if: ${{ inputs.live || github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e ./python
+      - name: Python examples
+        working-directory: examples/python
+        run: |
+          python prospect_list.py | head -3
+          python lookalikes.py stripe.com | head -3
+          python hiring_signals.py stripe.com | head -5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: npm ci && npm run build
+        working-directory: js
+      - name: JavaScript examples (on the package built from this repo)
+        working-directory: examples/js
+        run: |
+          npm install --no-save ../../js
+          node prospect-list.mjs | head -3
+          node lookalikes.mjs stripe.com | head -5

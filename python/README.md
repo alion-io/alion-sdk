@@ -1,5 +1,7 @@
 # alion
 
+[![PyPI](https://img.shields.io/pypi/v/alion)](https://pypi.org/project/alion/) [![Python](https://img.shields.io/pypi/pyversions/alion)](https://pypi.org/project/alion/) [![CI](https://github.com/alion-io/alion-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/alion-io/alion-sdk/actions/workflows/ci.yml) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alion-io/alion-sdk/blob/main/examples/notebooks/quickstart.ipynb)
+
 The official Python client for [Alion](https://alion.io/developers): a live graph of companies worldwide (what each one does, where it operates, its tech stack, funding rounds and investors, how fast it hires), startup investors, verified job postings with hiring and pay statistics, and people open to offers.
 
 Every tool of the [Alion MCP server](https://alion.io/developers/agents) is a typed method, sync or async. Python 3.9+. It uses only the standard library (plus `typing_extensions` before 3.11).
@@ -37,7 +39,87 @@ pay = alion.market_stats(role="Backend Developer", country="US")
 fund = alion.get_investor(domain="sequoiacap.com")
 ```
 
-Calls with a key are paid from your account's credits. Prices are at [alion.io/developers](https://alion.io/developers).
+Calls with a key are paid from your account's credits, and a key comes with $1 of free data every month. Prices are at [alion.io/developers/pricing](https://alion.io/developers/pricing).
+
+## Command line
+
+`pip install alion` also installs the `alion` command (or run `python -m alion`):
+
+```bash
+alion companies --industry Fintech --country DE --startup --limit 5
+alion similar stripe.com
+alion jobs --query "data engineer" --country PL --work_mode remote --format csv > jobs.csv
+alion events --type funding_round --country DE --since 7d            # with ALION_API_KEY
+alion enrich stripe.com adyen.com mollie.com --slices funding,hiring  # with ALION_API_KEY
+```
+
+```
+name              domain             industry            size_band  hq_country  open_jobs  founded_year
+----------------  -----------------  ------------------  ---------  ----------  ---------  ------------
+Skalar            skalar.de          Financial Services  11-50      DE          12
+Trade Republic    traderepublic.com  Financial Services  201-500    DE          42         2015
+Scalable Capital  scalable.capital   Financial Services  501-1000   DE          97         2014
+```
+
+Every flag is a tool argument. `--format table|json|csv`, `--all` walks every page, `--key` passes a key. `alion tools` lists every tool, `alion call <tool> --arg value` calls any of them.
+
+## Recipes
+
+**Enrich a list of domains** ($0.01 a company + $0.005 a slice; not found is free):
+
+```python
+res = alion.enrich_companies(["stripe.com", "adyen.com", "mollie.com"], slices="funding,hiring")
+res["items"], res["not_found"], res["credits_charged"]
+```
+
+Up to 100 companies a call; longer lists are split for you.
+
+**Follow funding rounds** ($0.005 an event):
+
+```python
+for event in alion.events(type="funding_round", country="DE", since="7d"):
+    print(event["type"], event["company"]["name"], event["date"])   # each event once, oldest first; polls every 15 minutes
+```
+
+`follow=False` reads once and stops. Or let Alion push them with `watch_search(kind="events", deliver="webhook", ...)` and check each delivery:
+
+```python
+from alion import verify_webhook
+
+ok = verify_webhook(raw_body, request.headers.get("X-Alion-Signature"), os.environ["ALION_WEBHOOK_SECRET"])
+```
+
+**A budget**: `Alion(max_credits=50)` refuses a call that could pass 50 credits ($5) in this process; `alion.credits_spent` says what was charged.
+
+**To pandas or CSV** (`pip install "alion[pandas]"` for pandas):
+
+```python
+from alion import to_pandas, to_csv
+
+rows = alion.search_companies(technology="Snowflake", country="US", hiring=True)
+df = to_pandas(rows)            # nested fields become funding.last_round, hq.city...
+open("snowflake.csv", "w").write(to_csv(rows))
+```
+
+More in [examples/python](https://github.com/alion-io/alion-sdk/tree/main/examples/python) and the [Colab notebook](https://colab.research.google.com/github/alion-io/alion-sdk/blob/main/examples/notebooks/quickstart.ipynb).
+
+## LlamaIndex
+
+```bash
+pip install "alion[llama-index]"
+```
+
+```python
+from llama_index.core.agent.workflow import FunctionAgent
+from alion.llama_index import alion_tools
+
+agent = FunctionAgent(tools=alion_tools(), llm=llm)   # no key: the free tools; ALION_API_KEY: all 16
+print(await agent.run("Which fintech startups in Germany raised money this month, and are they hiring?"))
+```
+
+`alion_tools(include=["search_companies", "get_company_money"], max_credits=20)` picks tools and caps the spend. A refusal (no key, a limit, a bad argument) goes back to the model as `{"error", "message", "hint"}`, so it can recover instead of failing the run.
+
+For LangChain and LangGraph there is [`langchain-alion`](https://pypi.org/project/langchain-alion/); CrewAI connects natively over MCP ([example](https://github.com/alion-io/alion-sdk/tree/main/examples/crewai)).
 
 ## Async
 

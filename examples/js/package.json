@@ -1,0 +1,21 @@
+{
+  "name": "alion-examples",
+  "private": true,
+  "type": "module",
+  "description": "Runnable examples of @alion-io/sdk: prospect lists, lookalikes, enrichment, funding alerts, webhooks, a Vercel AI SDK agent",
+  "scripts": {
+    "start": "node prospect-list.mjs",
+    "prospects": "node prospect-list.mjs",
+    "lookalikes": "node lookalikes.mjs stripe.com",
+    "enrich": "node enrich.mjs stripe.com adyen.com mollie.com",
+    "alerts": "node funding-alerts.mjs DE",
+    "webhook": "node webhook-receiver.mjs",
+    "agent": "node ai-agent.mjs"
+  },
+  "dependencies": {
+    "@alion-io/sdk": "^0.3.0"
+  },
+  "optionalDependencies": {
+    "ai": "^7.0.0"
+  }
+}

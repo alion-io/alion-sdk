@@ -1,5 +1,7 @@
 # langchain-alion
 
+[![PyPI](https://img.shields.io/pypi/v/langchain-alion)](https://pypi.org/project/langchain-alion/) [![CI](https://github.com/alion-io/alion-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/alion-io/alion-sdk/actions/workflows/ci.yml)
+
 LangChain tools for [Alion](https://alion.io/developers): a live graph of companies worldwide (what each one does, where it operates, its tech stack, funding rounds and investors, how fast it hires), startup investors, verified job postings, and hiring and pay statistics.
 
 Give an agent prospect lists, company enrichment by domain, lookalikes, investor research and market pay data. **Most tools are free without an account.**

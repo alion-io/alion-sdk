@@ -1,0 +1,17 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Alion SDK",
+  "description": "Company data for code and AI agents: companies, funding, investors, owners, events, public contracts and job postings. JS/TS and Python clients, a CLI, an MCP server, LangChain, Vercel AI SDK and LlamaIndex tools.",
+  "folders": ["js", "python", "langchain", "mcp", "examples"],
+  "excludeFolders": ["schema", "scripts", "js/test", "python/tests", "langchain/tests", "mcp/test"],
+  "excludeFiles": ["CHANGELOG.md"],
+  "rules": [
+    "Start without a key: new Alion() / Alion() uses the free open address (company, investor and job searches, lookalikes, matching, market statistics, 300 calls a day).",
+    "Pass the key as ALION_API_KEY; full profiles, slices, events, contracts and enrichment need it and are paid per row.",
+    "Set maxCredits (JS) or max_credits (Python) to cap what a script or an agent can spend.",
+    "A company is named by its domain, url, name or Alion id: getCompany({ domain: 'stripe.com' }), similarCompanies({ company: 'stripe.com' }).",
+    "Lists paginate with next_cursor; use paginate() and keep the other arguments the same.",
+    "Null or a missing field means unknown, never zero.",
+    "Agent frameworks: alionTools() from @alion-io/sdk/ai-sdk (Vercel AI SDK), alion_tools() from alion.llama_index (LlamaIndex), AlionToolkit from langchain_alion (LangChain), the MCP URL https://alion.io/mcp/open for any MCP client."
+  ]
+}

@@ -1,5 +1,7 @@
 # @alion-io/sdk
 
+[![npm](https://img.shields.io/npm/v/@alion-io/sdk)](https://www.npmjs.com/package/@alion-io/sdk) [![CI](https://github.com/alion-io/alion-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/alion-io/alion-sdk/actions/workflows/ci.yml) [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/alion-io/alion-sdk/tree/main/examples/js)
+
 The official JavaScript and TypeScript client for [Alion](https://alion.io/developers): a live graph of companies worldwide (what each one does, where it operates, its tech stack, funding rounds and investors, how fast it hires), startup investors, verified job postings with hiring and pay statistics, and people open to offers.
 
 Every tool of the [Alion MCP server](https://alion.io/developers/agents) is a typed method. It works in Node 18+, Bun, Deno, browsers and edge runtimes, and has no dependencies.
@@ -41,7 +43,88 @@ const pay = await alion.marketStats({ role: 'Backend Developer', country: 'US' }
 const fund = await alion.getInvestor({ domain: 'sequoiacap.com' });
 ```
 
-Calls with a key are paid from your account's credits. Prices are at [alion.io/developers](https://alion.io/developers).
+Calls with a key are paid from your account's credits, and a key comes with $1 of free data every month. Prices are at [alion.io/developers/pricing](https://alion.io/developers/pricing).
+
+## Command line
+
+No install needed:
+
+```bash
+npx @alion-io/sdk companies --industry Fintech --country DE --startup --limit 5
+npx @alion-io/sdk similar stripe.com
+npx @alion-io/sdk jobs --query "data engineer" --country PL --work_mode remote --format csv > jobs.csv
+npx @alion-io/sdk events --type funding_round --country DE --since 7d          # with ALION_API_KEY
+npx @alion-io/sdk enrich stripe.com adyen.com mollie.com --slices funding,hiring  # with ALION_API_KEY
+```
+
+```
+name              domain             industry            size_band  hq_country  open_jobs  founded_year
+----------------  -----------------  ------------------  ---------  ----------  ---------  ------------
+Skalar            skalar.de          Financial Services  11-50      DE          12
+Trade Republic    traderepublic.com  Financial Services  201-500    DE          42         2015
+Scalable Capital  scalable.capital   Financial Services  501-1000   DE          97         2014
+```
+
+Every flag is a tool argument. `--format table|json|csv`, `--all` walks every page, `--key` passes a key. `npx @alion-io/sdk tools` lists every tool, `npx @alion-io/sdk call <tool> --arg value` calls any of them.
+
+## Recipes
+
+**Enrich a list of domains** ($0.01 a company + $0.005 a slice; not found is free):
+
+```ts
+const { items, not_found, credits_charged } = await alion.enrichCompanies(['stripe.com', 'adyen.com', 'mollie.com'], { slices: 'funding,hiring' });
+```
+
+Up to 100 companies a call; longer lists are split for you.
+
+**Follow funding rounds** ($0.005 an event):
+
+```ts
+for await (const event of alion.events({ type: 'funding_round', country: 'DE', since: '7d' })) {
+  console.log(event.type, event.company?.name, event.date);   // each event once, oldest first; polls every 15 minutes
+}
+```
+
+`{ follow: false }` reads once and stops. Or let Alion push them: `watchSearch({ kind: 'events', deliver: 'webhook', ... })`, then check each delivery:
+
+```ts
+import { verifyWebhook } from '@alion-io/sdk';
+
+const ok = await verifyWebhook(rawBody, request.headers.get('x-alion-signature'), process.env.ALION_WEBHOOK_SECRET!);
+```
+
+**A budget**: `new Alion({ maxCredits: 50 })` refuses a call that could pass 50 credits ($5) in this process; `alion.creditsSpent` says what was charged.
+
+**To CSV**:
+
+```ts
+import { toCSV } from '@alion-io/sdk';
+
+const { items } = await alion.searchCompanies({ technology: 'Snowflake', country: 'US', hiring: true });
+await fs.writeFile('snowflake.csv', toCSV(items));     // nested fields become funding.last_round, hq.city...
+```
+
+More in [examples/js](https://github.com/alion-io/alion-sdk/tree/main/examples/js).
+
+## Vercel AI SDK
+
+```bash
+npm install @alion-io/sdk ai
+```
+
+```ts
+import { generateText, stepCountIs } from 'ai';
+import { alionTools } from '@alion-io/sdk/ai-sdk';
+
+const { text } = await generateText({
+  model: 'anthropic/claude-sonnet-5-5',
+  tools: alionTools(),                  // no key: the free tools; ALION_API_KEY: all 16
+  stopWhen: stepCountIs(5),
+  prompt: 'Which fintech startups in Germany raised money this month, and are they hiring?',
+});
+```
+
+`alionTools({ include: ['search_companies', 'get_company_money'], maxCredits: 20 })` picks tools and caps the spend. A refusal (no key, a limit, a bad argument) goes back to the model as `{ error, message, hint }`, so it can recover instead of failing the run.
 
 ## Paging
 
@@ -68,6 +151,7 @@ try {
   if (e instanceof AlionError) {
     e.code;          // "account_required", "invalid_params", "rate_limited", "unauthorized", "timeout", ...
     e.needsAccount;  // true when the tool needs a key or a payment
+    e.hint;          // what to do: where to get a key, when to retry
     e.data;          // the server's full answer: hints, free_tools, examples
   }
 }
@@ -83,6 +167,7 @@ new Alion({
   appName: 'my-agent/1.0',  // added to the User-Agent so Alion can tell your agent apart
   timeoutMs: 60_000,
   maxRetries: 2,
+  maxCredits: 50,           // refuse calls that could pass this budget (credits, $0.10 each)
   fetch: customFetch,       // any fetch implementation
   headers: { ... },         // extra headers on every call
 });
