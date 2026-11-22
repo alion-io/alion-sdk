@@ -3313,6 +3313,11 @@ export interface WatchSearchArgs {
     filters: Record<string, unknown>;
     /** A short label, e.g. "Remote Go roles in EU". */
     name?: string;
+    /**
+     * kind events only: "webhook" posts the new events to the agent's webhook (set_webhook) every 15 minutes as
+     * event "watch.events", paid per event; "poll" waits for check_watch.
+     */
+    deliver?: "poll" | "webhook";
 }
 
 /** Result of watch_search. */

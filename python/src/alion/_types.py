@@ -3419,6 +3419,8 @@ class WatchSearchArgs(TypedDict, total=False):
     """The search arguments to follow (cursor and limit are ignored)."""
     name: str
     """A short label, e.g. \"Remote Go roles in EU\"."""
+    deliver: Literal["poll", "webhook"]
+    """kind events only: \"webhook\" posts the new events to the agent's webhook (set_webhook) every 15 minutes as event \"watch.events\", paid per event; \"poll\" waits for check_watch."""
 
 
 class WatchSearchResultMeta(TypedDict, total=False):
