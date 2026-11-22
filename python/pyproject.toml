@@ -14,7 +14,7 @@ authors = [{ name = "Alion", email = "info@alion.io" }]
 keywords = [
   "alion", "company data", "company enrichment", "startups", "investors", "venture capital",
   "funding rounds", "job postings", "jobs api", "labor market", "salary data", "tech stack",
-  "lookalike companies", "sales prospecting", "mcp", "model context protocol", "ai agents", "llm tools",
+  "lookalike companies", "sales prospecting", "cli", "kyb", "public contracts", "company events", "mcp", "model context protocol", "ai agents", "llm tools",
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -38,6 +38,10 @@ dependencies = ['typing_extensions>=4.7; python_version < "3.11"']
 
 [project.optional-dependencies]
 dev = ["pytest>=7", "mypy>=1.10"]
+pandas = ["pandas>=1.5"]
+
+[project.scripts]
+alion = "alion._cli:main"
 
 [project.urls]
 Homepage = "https://alion.io/developers"

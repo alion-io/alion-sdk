@@ -29,6 +29,15 @@ export class AlionError extends Error {
         this.retryAfter = init.retryAfter;
     }
 
+    /** What to do next, in one sentence (where to get a key, when to retry). */
+    get hint(): string | undefined {
+        if (this.needsAccount) return 'This call needs an API key: create one at https://alion.io/developers/keys (prices: https://alion.io/developers/pricing), then pass apiKey or set ALION_API_KEY.';
+        if (this.code === 'insufficient_credits') return 'The account is out of credits: top up at https://alion.io/developers/pricing.';
+        if (this.code === 'rate_limited') return `The limit is reached${this.retryAfter ? `; retry in ${this.retryAfter} s` : ''}. Without a key the open address allows 300 calls a day per network; a key lifts it.`;
+        if (this.code === 'budget_exceeded') return 'Raise maxCredits, or create a new client for the next batch of work.';
+        return undefined;
+    }
+
     /** True when the call needs an API key (or an x402 payment): the tool is not free on the open address. */
     get needsAccount(): boolean {
         return ['account_required', 'payment_required', 'auth_required', 'unauthorized', 'http_401', 'http_402'].includes(this.code);

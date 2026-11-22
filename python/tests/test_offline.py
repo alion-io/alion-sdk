@@ -169,3 +169,73 @@ def test_async_client():
         assert ei.value.needs_account
 
     asyncio.run(main())
+
+
+# 0.3.0: budget, CI marker, batch enrichment, the event feed, webhooks, CSV, the command line
+
+
+def test_max_credits_stops_the_next_call():
+    f = Fake(ok({"id": 1, "meta": {"credits_charged": 0.35}}), ok({"id": 2}))
+    a = Alion(api_key="k", transport=f, max_credits=0.3)
+    a.get_company(domain="stripe.com")
+    assert a.credits_spent == 0.35
+    with pytest.raises(AlionError) as e:
+        a.get_company(domain="adyen.com")
+    assert e.value.code == "budget_exceeded" and e.value.hint
+    assert len(f.calls) == 1
+
+
+def test_user_agent_says_ci_in_a_pipeline(monkeypatch):
+    monkeypatch.setenv("CI", "true")
+    f = Fake(ok({"items": []}))
+    Alion(api_key="", transport=f, app_name="x/1").search_jobs()
+    assert re.fullmatch(r"alion-python/[\d.]+ x/1 ci", f.calls[0]["headers"]["User-Agent"])
+
+
+def test_enrich_companies_batches_through_rest():
+    def page(n, missing=0):
+        return 200, {"success": True, "response": {"items": [{"query": f"c{i}", "id": i, "name": "x", "domain": None, "url": "u"} for i in range(n)], "not_found": [f"m{i}" for i in range(missing)], "meta": {"credits_charged": 1}}}
+    f = Fake(page(100), page(0, 30))
+    r = Alion(api_key="k", transport=f).enrich_companies([f"c{i}.com" for i in range(130)], slices=["funding"])
+    assert [c["url"] for c in f.calls] == ["https://alion.io/api/company.getBatch"] * 2
+    assert len(f.calls[0]["body"]["domains"]) == 100 and f.calls[0]["body"]["slices"] == "funding"
+    assert f.calls[0]["headers"]["Authorization"] == "Bearer k"
+    assert len(r["items"]) == 100 and len(r["not_found"]) == 30 and r["credits_charged"] == 2
+    with pytest.raises(AlionError) as e:
+        Alion(api_key="", transport=f).enrich_companies(["a.com"])
+    assert e.value.code == "account_required"
+
+
+def test_rest_errors_carry_codes():
+    f = Fake((402, {"success": False, "error": {"error_code": 9, "error_msg": "Not enough credits"}}))
+    with pytest.raises(AlionError) as e:
+        Alion(api_key="k", transport=f).enrich_companies(["a.com"])
+    assert e.value.code == "insufficient_credits" and "top up" in e.value.hint
+
+
+def test_events_yield_each_once_oldest_first():
+    f = Fake(ok({"items": [{"id": "e2"}, {"id": "e1"}], "next_cursor": None}))
+    got = [e["id"] for e in Alion(api_key="k", transport=f).events(type="funding_round", follow=False)]
+    assert got == ["e1", "e2"]
+    assert f.calls[0]["body"]["params"]["name"] == "search_company_events"
+    assert f.calls[0]["body"]["params"]["arguments"]["since"] == "24h"
+
+
+def test_verify_webhook():
+    import hashlib
+    import hmac
+    body = '{"event":"watch.events"}'
+    sig = "sha256=" + hmac.new(b"s3cret", body.encode(), hashlib.sha256).hexdigest()
+    assert alion.verify_webhook(body, sig, "s3cret")
+    assert not alion.verify_webhook(body + " ", sig, "s3cret")
+    assert not alion.verify_webhook(body, None, "s3cret")
+
+
+def test_to_csv_flattens():
+    assert alion.to_csv({"items": [{"name": "A, B", "hq": {"country": "DE"}, "tags": ["x", "y"]}]}) == 'name,hq.country,tags\n"A, B",DE,x; y\n'
+
+
+def test_cli_help_and_version(capsys):
+    from alion._cli import run
+    assert run(["help"]) == 0 and "company and job data" in capsys.readouterr().out
+    assert run(["version"]) == 0 and capsys.readouterr().out.strip() == alion.__version__

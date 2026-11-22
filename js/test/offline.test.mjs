@@ -139,3 +139,73 @@ test('timeout -> AlionError timeout', async () => {
     const f = (url, init) => new Promise((_, reject) => init.signal.addEventListener('abort', () => reject(init.signal.reason)));
     await assert.rejects(new Alion({ apiKey: null, fetch: f, timeoutMs: 30, maxRetries: 0 }).searchJobs(), (e) => e.code === 'timeout');
 });
+
+// 0.3.0: budget, CI marker, batch enrichment, the event feed, webhooks, CSV, error hints
+
+test('maxCredits stops the next call once spent', async () => {
+    const f = fake([ok({ id: 1, meta: { credits_charged: 0.35 } }), ok({ id: 2, meta: { credits_charged: 0.35 } })]);
+    const a = new Alion({ apiKey: 'k', fetch: f, maxCredits: 0.3 });
+    await a.getCompany({ domain: 'stripe.com' });
+    assert.equal(a.creditsSpent, 0.35);
+    await assert.rejects(() => a.getCompany({ domain: 'adyen.com' }), (e) => e instanceof AlionError && e.code === 'budget_exceeded' && !!e.hint);
+    assert.equal(f.calls.length, 1);
+});
+
+test('User-Agent says ci inside a pipeline', async () => {
+    const was = process.env.CI;
+    process.env.CI = 'true';
+    const f = fake([ok({ items: [] })]);
+    await new Alion({ apiKey: null, fetch: f, appName: 'x/1' }).searchJobs({});
+    assert.match(f.calls[0].init.headers['User-Agent'], /^alion-js\/[\d.]+ x\/1 ci$/);
+    if (was === undefined) delete process.env.CI; else process.env.CI = was;
+});
+
+test('enrichCompanies batches through REST and sums the cost', async () => {
+    const domains = Array.from({ length: 130 }, (_, i) => `c${i}.com`);
+    const f = fake([
+        (c) => ({ body: { success: true, response: { items: c.body.domains.map((d) => ({ query: d, id: 1, name: d, domain: d, url: 'u' })), not_found: [], meta: { credits_charged: 1 } } } }),
+        (c) => ({ body: { success: true, response: { items: [], not_found: c.body.domains, meta: { credits_charged: 0 } } } }),
+    ]);
+    const a = new Alion({ apiKey: 'k', fetch: f });
+    const r = await a.enrichCompanies(domains, { slices: 'funding' });
+    assert.equal(f.calls.length, 2);
+    assert.equal(f.calls[0].url, 'https://alion.io/api/company.getBatch');
+    assert.equal(f.calls[0].body.domains.length, 100);
+    assert.equal(f.calls[0].init.headers.Authorization, 'Bearer k');
+    assert.equal(r.items.length, 100);
+    assert.equal(r.not_found.length, 30);
+    assert.equal(r.credits_charged, 1);
+    await assert.rejects(() => new Alion({ apiKey: null, fetch: f }).enrichCompanies(['a.com']), (e) => e.code === 'account_required');
+});
+
+test('events yields each event once, oldest first', async () => {
+    const f = fake([ok({ items: [{ id: 'e2', date: '2026-11-22' }, { id: 'e1', date: '2026-11-21' }], next_cursor: null })]);
+    const got = [];
+    for await (const e of new Alion({ apiKey: 'k', fetch: f }).events({ type: 'funding_round' }, { follow: false })) got.push(e.id);
+    assert.deepEqual(got, ['e1', 'e2']);
+    assert.equal(f.calls[0].body.params.name, 'search_company_events');
+    assert.equal(f.calls[0].body.params.arguments.since, '24h');
+});
+
+test('verifyWebhook checks the sha256 HMAC', async () => {
+    const { verifyWebhook } = await import('../dist/esm/index.js');
+    const { createHmac } = await import('node:crypto');
+    const body = '{"event":"watch.events"}';
+    const sig = 'sha256=' + createHmac('sha256', 's3cret').update(body).digest('hex');
+    assert.equal(await verifyWebhook(body, sig, 's3cret'), true);
+    assert.equal(await verifyWebhook(body + ' ', sig, 's3cret'), false);
+    assert.equal(await verifyWebhook(body, null, 's3cret'), false);
+});
+
+test('toCSV flattens nested fields', async () => {
+    const { toCSV } = await import('../dist/esm/index.js');
+    const csv = toCSV([{ name: 'A, B', hq: { country: 'DE' }, tags: ['x', 'y'] }]);
+    assert.equal(csv, 'name,hq.country,tags\n"A, B",DE,x; y\n');
+});
+
+test('the CLI prints help and a version', async () => {
+    const { execFileSync } = await import('node:child_process');
+    const cli = new URL('../dist/esm/cli.js', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+    assert.match(execFileSync(process.execPath, [cli, 'help']).toString(), /alion .* company and job data/);
+    assert.equal(execFileSync(process.execPath, [cli, 'version']).toString().trim(), pkg.version);
+});

@@ -9,7 +9,8 @@ import socket
 import time
 import urllib.error
 import urllib.request
-from typing import Any, AsyncIterator, Callable, Dict, Iterator, List, Mapping, Optional, Tuple
+from datetime import datetime, timedelta, timezone
+from typing import Any, AsyncIterator, Callable, Dict, Iterable, Iterator, List, Mapping, Optional, Set, Tuple, Union
 
 from ._errors import AlionError
 from ._tools import AsyncTools, SyncTools
@@ -50,6 +51,7 @@ class _Base:
         app_name: Optional[str] = None,
         headers: Optional[Mapping[str, str]] = None,
         transport: Optional[Transport] = None,
+        max_credits: Optional[float] = None,
     ) -> None:
         key = os.environ.get("ALION_API_KEY", "") if api_key is None else api_key
         self.api_key: Optional[str] = key or None
@@ -58,7 +60,13 @@ class _Base:
         self.timeout = float(timeout)
         self.max_retries = max(0, int(max_retries))
         self._transport: Transport = transport or urllib_transport
-        self._user_agent = f"alion-python/{__version__}" + (f" {app_name}" if app_name else "")
+        # (" ci" in a pipeline: Alion counts people, not test runs - yours or ours)
+        ci = os.environ.get("CI", "")
+        self._user_agent = f"alion-python/{__version__}" + (f" {app_name}" if app_name else "") + (" ci" if ci and ci.lower() != "false" else "")
+        self.max_credits: Optional[float] = float(max_credits) if max_credits is not None and max_credits >= 0 else None
+        """A spending cap in credits (1 credit = $0.10): once reached, the next call raises AlionError "budget_exceeded"."""
+        self.credits_spent: float = 0.0
+        """Credits this client has spent so far (from each answer's meta.credits_charged)."""
         self._extra_headers = dict(headers or {})
         self._next_id = 0
 
@@ -89,6 +97,49 @@ class _Base:
             raise AlionError._from_rpc(data["error"])
         return data
 
+    def _check_budget(self, what: str) -> None:
+        if self.max_credits is not None and self.credits_spent >= self.max_credits:
+            raise AlionError(f"max_credits ({self.max_credits}) reached after {self.credits_spent:.3f} credits; {what} was not called", code="budget_exceeded")
+
+    def _count(self, payload: Any) -> None:
+        meta = payload.get("meta") if isinstance(payload, dict) else None
+        c = meta.get("credits_charged") if isinstance(meta, dict) else None
+        if isinstance(c, (int, float)):
+            self.credits_spent += float(c)
+
+    def _rest_request(self, route: str, body: Dict[str, Any]) -> Tuple[str, Dict[str, str], bytes]:
+        if not self.api_key:
+            raise AlionError(f"{route} needs an API key: create one at https://alion.io/developers/keys", code="account_required")
+        headers = {"Content-Type": "application/json", "Accept": "application/json", "User-Agent": self._user_agent, "Authorization": f"Bearer {self.api_key}"}
+        headers.update(self._extra_headers)
+        return f"{self.base_url}/api/{route}", headers, json.dumps(body).encode("utf-8")
+
+    @staticmethod
+    def _rest_parse(route: str, status: int, text: str) -> Dict[str, Any]:
+        try:
+            data = json.loads(text) if text else None
+        except ValueError:
+            data = None
+        if isinstance(data, dict) and data.get("success") is True:
+            resp = data.get("response")
+            return resp if isinstance(resp, dict) else {}
+        e: Dict[str, Any] = data["error"] if isinstance(data, dict) and isinstance(data.get("error"), dict) else {}
+        code = "insufficient_credits" if status == 402 or e.get("error_code") == 9 else "rate_limited" if status == 429 or e.get("error_code") == 7 else "unauthorized" if status == 401 else f"http_{status}"
+        raise AlionError(f"{route}: {e.get('error_msg') or f'HTTP {status}'}", code=code, status=status, data=e.get("error_data", data))
+
+    @staticmethod
+    def _batches(companies: Iterable[str], slices: Optional[Union[str, Iterable[str]]]) -> Tuple[List[List[str]], str]:
+        s = slices if isinstance(slices, str) or slices is None else ",".join(slices)
+        s = s or ""
+        size = 25 if any(x.strip() in ("offices", "visa", "all", "standard") for x in s.split(",")) else 100
+        seen: Dict[str, None] = {}
+        for c in companies:
+            c = str(c).strip()
+            if c:
+                seen.setdefault(c, None)
+        items = list(seen)
+        return [items[i:i + size] for i in range(0, len(items), size)], s
+
     def _network_error(self, e: BaseException) -> AlionError:
         if isinstance(e, (socket.timeout, TimeoutError)) or "timed out" in str(e):
             return AlionError(f"no answer from {self.endpoint} in time: {e}", code="timeout")
@@ -113,8 +164,61 @@ class Alion(_Base, SyncTools):
 
     def call(self, name: str, args: Optional[Dict[str, Any]] = None, *, timeout: Optional[float] = None) -> Any:
         """Calls a tool by name. The typed methods (search_companies, get_company, ...) are shortcuts for this."""
+        self._check_budget(name)
         rpc = self._rpc("tools/call", {"name": name, "arguments": _clean(args)}, timeout, name in READ_ONLY_TOOLS)
-        return _tool_result(name, rpc)
+        res = _tool_result(name, rpc)
+        self._count(res)
+        return res
+
+    def enrich_companies(self, companies: Iterable[str], *, slices: Optional[Union[str, Iterable[str]]] = None, timeout: Optional[float] = None) -> Dict[str, Any]:
+        """Enriches many companies at once (a CRM column, a spreadsheet): domains, names or ids, each answered with its card and
+        the slices asked for, in batches of 100 (25 with the offices or visa slice). Needs an API key; the ones not found are free.
+
+        >>> res = alion.enrich_companies(["stripe.com", "adyen.com"], slices="funding,hiring")
+        >>> res["items"], res["not_found"], res["credits_charged"]
+        """
+        batches, s = self._batches(companies, slices)
+        out: Dict[str, Any] = {"items": [], "not_found": [], "credits_charged": 0.0}
+        for batch in batches:
+            self._check_budget("company.getBatch")
+            url, headers, body = self._rest_request("company.getBatch", {"domains": batch, **({"slices": s} if s else {})})
+            status, _, text = self._transport(url, headers, body, timeout or self.timeout)
+            res = self._rest_parse("company.getBatch", status, text)
+            out["items"].extend(res.get("items") or [])
+            out["not_found"].extend(res.get("not_found") or [])
+            out["credits_charged"] += float((res.get("meta") or {}).get("credits_charged") or 0)
+            self._count(res)
+        return out
+
+    def events(self, *, follow: bool = True, interval: float = 900.0, timeout: Optional[float] = None, **args: Any) -> Iterator[Dict[str, Any]]:
+        """Follows the company event feed (rounds, new offices, leadership hires, Buying windows...): yields each new event
+        once, oldest first, polling every ``interval`` seconds (default 15 minutes); ``follow=False`` reads once. $0.005 an event.
+
+        >>> for e in alion.events(type="funding_round", country="DE"): print(e["date"], e["company"]["name"], e["detail"])
+        """
+        seen: Set[str] = set()
+        since = args.pop("since", None) or "24h"
+        while True:
+            started = datetime.now(timezone.utc)
+            fresh: List[Dict[str, Any]] = []
+            cursor: Optional[str] = None
+            while True:
+                page = self.call("search_company_events", {**args, "since": since, "limit": 50, **({"cursor": cursor} if cursor else {})}, timeout=timeout)
+                for e in page.get("items") or []:
+                    if str(e.get("id")) not in seen:
+                        seen.add(str(e.get("id")))
+                        fresh.append(e)
+                cursor = page.get("next_cursor")
+                if not cursor:
+                    break
+            for e in reversed(fresh):
+                yield e
+            if not follow:
+                return
+            if len(seen) > 5000:
+                seen = set(list(seen)[-2000:])
+            since = (started - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+            time.sleep(interval)
 
     def paginate(self, name: str, *, max_items: Optional[int] = None, timeout: Optional[float] = None, **args: Any) -> Iterator[Dict[str, Any]]:
         """Walks every page of a search, yielding one row at a time (searches stop at row 100 on the server).
@@ -191,8 +295,53 @@ class AsyncAlion(_Base, AsyncTools):
 
     async def call(self, name: str, args: Optional[Dict[str, Any]] = None, *, timeout: Optional[float] = None) -> Any:
         """Calls a tool by name. The typed methods are shortcuts for this."""
+        self._check_budget(name)
         rpc = await self._rpc("tools/call", {"name": name, "arguments": _clean(args)}, timeout, name in READ_ONLY_TOOLS)
-        return _tool_result(name, rpc)
+        res = _tool_result(name, rpc)
+        self._count(res)
+        return res
+
+    async def enrich_companies(self, companies: Iterable[str], *, slices: Optional[Union[str, Iterable[str]]] = None, timeout: Optional[float] = None) -> Dict[str, Any]:
+        """Enriches many companies at once, as :meth:`Alion.enrich_companies`."""
+        batches, s = self._batches(companies, slices)
+        out: Dict[str, Any] = {"items": [], "not_found": [], "credits_charged": 0.0}
+        loop = asyncio.get_running_loop()
+        for batch in batches:
+            self._check_budget("company.getBatch")
+            url, headers, body = self._rest_request("company.getBatch", {"domains": batch, **({"slices": s} if s else {})})
+            status, _, text = await loop.run_in_executor(None, functools.partial(self._transport, url, headers, body, timeout or self.timeout))
+            res = self._rest_parse("company.getBatch", status, text)
+            out["items"].extend(res.get("items") or [])
+            out["not_found"].extend(res.get("not_found") or [])
+            out["credits_charged"] += float((res.get("meta") or {}).get("credits_charged") or 0)
+            self._count(res)
+        return out
+
+    async def events(self, *, follow: bool = True, interval: float = 900.0, timeout: Optional[float] = None, **args: Any) -> AsyncIterator[Dict[str, Any]]:
+        """Follows the company event feed, as :meth:`Alion.events`."""
+        seen: Set[str] = set()
+        since = args.pop("since", None) or "24h"
+        while True:
+            started = datetime.now(timezone.utc)
+            fresh: List[Dict[str, Any]] = []
+            cursor: Optional[str] = None
+            while True:
+                page = await self.call("search_company_events", {**args, "since": since, "limit": 50, **({"cursor": cursor} if cursor else {})}, timeout=timeout)
+                for e in page.get("items") or []:
+                    if str(e.get("id")) not in seen:
+                        seen.add(str(e.get("id")))
+                        fresh.append(e)
+                cursor = page.get("next_cursor")
+                if not cursor:
+                    break
+            for e in reversed(fresh):
+                yield e
+            if not follow:
+                return
+            if len(seen) > 5000:
+                seen = set(list(seen)[-2000:])
+            since = (started - timedelta(minutes=10)).strftime("%Y-%m-%d %H:%M:%S")
+            await asyncio.sleep(interval)
 
     async def paginate(self, name: str, *, max_items: Optional[int] = None, timeout: Optional[float] = None, **args: Any) -> AsyncIterator[Dict[str, Any]]:
         """Walks every page of a search, yielding one row at a time.

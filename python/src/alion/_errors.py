@@ -36,6 +36,20 @@ class AlionError(Exception):
         self.retry_after = retry_after
 
     @property
+    def hint(self) -> Optional[str]:
+        """What to do next, in one sentence (where to get a key, when to retry)."""
+        if self.needs_account:
+            return "This call needs an API key: create one at https://alion.io/developers/keys (prices: https://alion.io/developers/pricing), then pass api_key or set ALION_API_KEY."
+        if self.code == "insufficient_credits":
+            return "The account is out of credits: top up at https://alion.io/developers/pricing."
+        if self.code == "rate_limited":
+            wait = f"; retry in {int(self.retry_after)} s" if self.retry_after else ""
+            return f"The limit is reached{wait}. Without a key the open address allows 300 calls a day per network; a key lifts it."
+        if self.code == "budget_exceeded":
+            return "Raise max_credits, or create a new client for the next batch of work."
+        return None
+
+    @property
     def needs_account(self) -> bool:
         """True when the tool needs an API key (or a payment): it is not free on the open address."""
         return self.code in _ACCOUNT_CODES

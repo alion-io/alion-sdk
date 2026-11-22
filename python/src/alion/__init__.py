@@ -9,6 +9,7 @@ statistics, and people open to offers, for code and AI agents. https://alion.io/
 from . import _types as types
 from ._client import DEFAULT_BASE_URL, PROTOCOL_VERSION, Alion, AsyncAlion, Response, Transport, urllib_transport
 from ._errors import AlionError
+from ._helpers import flatten, to_csv, to_pandas, verify_webhook
 from ._types import PAGED_TOOLS, READ_ONLY_TOOLS, TOOL_NAMES
 from ._version import __version__
 
@@ -16,6 +17,10 @@ __all__ = [
     "Alion",
     "AsyncAlion",
     "AlionError",
+    "verify_webhook",
+    "to_csv",
+    "to_pandas",
+    "flatten",
     "types",
     "PAGED_TOOLS",
     "READ_ONLY_TOOLS",
