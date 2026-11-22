@@ -275,7 +275,7 @@ function emitPyMethods(data) {
 
 // LangChain: pydantic input schemas and one BaseTool subclass per tool, for the tools an agent framework should get
 // (companies, investors, jobs, markets, checks; the people and messaging tools stay out: privacy)
-const LANGCHAIN_TOOLS = ['search_companies', 'get_company', 'similar_companies', 'resolve_company', 'check_counterparty', 'search_investors', 'get_investor', 'search_jobs', 'get_job', 'market_stats'];
+const LANGCHAIN_TOOLS = ['search_companies', 'get_company', 'similar_companies', 'resolve_company', 'check_counterparty', 'search_investors', 'get_investor', 'search_jobs', 'get_job', 'market_stats', 'get_company_money', 'get_company_ownership', 'get_company_record', 'search_company_events', 'search_contracts'];
 
 function pydType(s) {
     if (!s || typeof s !== 'object') return 'Any';

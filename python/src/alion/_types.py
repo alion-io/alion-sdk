@@ -199,6 +199,23 @@ class SearchJobsResultMeta(TypedDict, total=False):
     docs: Optional[str]
 
 
+class SearchJobsResultCite(TypedDict, total=False):
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+    text: Optional[str]
+    """A dated sentence with the figures of this answer, ready to quote as written"""
+    url: Optional[str]
+    """The public Alion page the figures stand on: link it where the sentence is used"""
+    as_of: Optional[str]
+    """The day the figures are true for (UTC, YYYY-MM-DD)"""
+    source: Optional[str]
+    reference: Optional[str]
+    """The same as one line for a list of sources"""
+    license: Optional[str]
+    """The licence of the figures, when they may be reused"""
+    how: Optional[str]
+
+
 class SearchJobsResult(TypedDict, total=False):
     items: List[SearchJobsResultItemsItem]
     returned: Optional[int]
@@ -211,6 +228,8 @@ class SearchJobsResult(TypedDict, total=False):
     """Arguments that were ignored or matched nothing, with what to try instead."""
     meta: SearchJobsResultMeta
     """Quota and credit standing after this call."""
+    cite: Optional[SearchJobsResultCite]
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
 
 
 class GetJobArgs(TypedDict, total=False):
@@ -365,6 +384,23 @@ class GetJobResultMeta(TypedDict, total=False):
     docs: Optional[str]
 
 
+class GetJobResultCite(TypedDict, total=False):
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+    text: Optional[str]
+    """A dated sentence with the figures of this answer, ready to quote as written"""
+    url: Optional[str]
+    """The public Alion page the figures stand on: link it where the sentence is used"""
+    as_of: Optional[str]
+    """The day the figures are true for (UTC, YYYY-MM-DD)"""
+    source: Optional[str]
+    reference: Optional[str]
+    """The same as one line for a list of sources"""
+    license: Optional[str]
+    """The licence of the figures, when they may be reused"""
+    how: Optional[str]
+
+
 class GetJobResult(TypedDict, total=False):
     id: Optional[int]
     """Alion job id"""
@@ -435,6 +471,8 @@ class GetJobResult(TypedDict, total=False):
     """The official visa sponsor registers (UK Home Office, US DOL LCA/PERM, Dutch IND, Canadian LMIA) matched to the employer"""
     meta: GetJobResultMeta
     """Quota and credit standing after this call."""
+    cite: Optional[GetJobResultCite]
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
 
 
 class ResolveCompanyArgs(TypedDict, total=False):
@@ -446,6 +484,8 @@ class ResolveCompanyArgs(TypedDict, total=False):
     """Company name as written."""
     query: str
     """Any of the above when you are not sure which it is."""
+    identifier: str
+    """A registration number: LEI, SEC CIK, Companies House number, Wikidata QID, VAT, SIREN, INN, OGRN, EIN... bare or with its scheme (\"lei:5493001KJTIIGC8Y1R12\", \"cik:1652044\")."""
 
 
 class ResolveCompanyResultMatchVariant1Funding(TypedDict, total=False):
@@ -631,6 +671,23 @@ class ResolveCompanyResultMeta(TypedDict, total=False):
     docs: Optional[str]
 
 
+class ResolveCompanyResultCite(TypedDict, total=False):
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+    text: Optional[str]
+    """A dated sentence with the figures of this answer, ready to quote as written"""
+    url: Optional[str]
+    """The public Alion page the figures stand on: link it where the sentence is used"""
+    as_of: Optional[str]
+    """The day the figures are true for (UTC, YYYY-MM-DD)"""
+    source: Optional[str]
+    reference: Optional[str]
+    """The same as one line for a list of sources"""
+    license: Optional[str]
+    """The licence of the figures, when they may be reused"""
+    how: Optional[str]
+
+
 class ResolveCompanyResult(TypedDict, total=False):
     query: Optional[str]
     match: Optional[ResolveCompanyResultMatchVariant1]
@@ -640,6 +697,8 @@ class ResolveCompanyResult(TypedDict, total=False):
     candidates: List[ResolveCompanyResultCandidatesItem]
     meta: ResolveCompanyResultMeta
     """Quota and credit standing after this call."""
+    cite: Optional[ResolveCompanyResultCite]
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
 
 
 class SearchCompaniesArgs(TypedDict, total=False):
@@ -681,6 +740,26 @@ class SearchCompaniesArgs(TypedDict, total=False):
     """A fund, angel network or accelerator by domain (\"sequoiacap.com\", \"ycombinator.com\") or name: the companies in its portfolio and the rounds it is named in."""
     include_agencies: bool
     """Include staffing and recruiting agencies (left out by default)."""
+    headcount_min: int
+    """At least this many employees as a named source (a register, a filing, the site) stated in the last three years."""
+    headcount_max: int
+    """At most this many employees, as above."""
+    revenue_min_usd: int
+    """Revenue on file of at least this many US dollars (an estimate or a stated figure of the last three years)."""
+    listed: bool
+    """true = listed on a stock exchange (has a ticker), false = not listed."""
+    has_public_contracts: bool
+    """Only companies that won public contracts (the tender graph); search_contracts lists them."""
+    has_patents: bool
+    """Only companies with patents or patent applications on file."""
+    has_clinical_trials: bool
+    """Only companies sponsoring or running clinical trials."""
+    list: str
+    """On a list, ranking or programme by name: \"unicorn\", \"Hurun\", \"FT 1000\", \"Inc. 5000\", \"Future 100\", \"Skolkovo\", \"Astana Hub\"..."""
+    buying_signal: Literal["funding", "hiring", "leadership", "expansion", "programme", "public_contract", "risk", "other"]
+    """Only companies with an open Buying window of this kind - a dated change that opens purchases: funding (a round, a deal, an asset), hiring (a function scaled or stuck), leadership (a new executive), expansion (a new country or office), programme (a build-out, a product or technology programme), public_contract (a contract won, ending or tendered), risk (regulation, legal, ESG), other. The window with its sources is on the company's page: url + \"/buying-windows\"."""
+    about_to_buy: Literal["rec", "eor", "legal", "acc", "bank", "ins", "re", "it", "sec", "saas", "data", "mkt", "loc", "cons", "ma", "esg", "bid", "ind", "med", "edu", "log"]
+    """Only companies whose open Buying windows lead to a purchase of this category (rec recruitment, legal, acc accounting, ins insurance, it IT services, sec security, saas software, mkt marketing, cons consulting ...). Combine with buying_signal for \"why\"."""
     sort: Literal["recent_hiring", "open_jobs", "score", "newest", "name", "recent_funding"]
     """recent_hiring (default), recent_funding (the newest matching round first), open_jobs, score, newest (newest in the graph), name."""
     detail: Literal["standard", "compact"]
@@ -794,6 +873,23 @@ class SearchCompaniesResultMeta(TypedDict, total=False):
     docs: Optional[str]
 
 
+class SearchCompaniesResultCite(TypedDict, total=False):
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+    text: Optional[str]
+    """A dated sentence with the figures of this answer, ready to quote as written"""
+    url: Optional[str]
+    """The public Alion page the figures stand on: link it where the sentence is used"""
+    as_of: Optional[str]
+    """The day the figures are true for (UTC, YYYY-MM-DD)"""
+    source: Optional[str]
+    reference: Optional[str]
+    """The same as one line for a list of sources"""
+    license: Optional[str]
+    """The licence of the figures, when they may be reused"""
+    how: Optional[str]
+
+
 class SearchCompaniesResult(TypedDict, total=False):
     items: List[SearchCompaniesResultItemsItem]
     returned: Optional[int]
@@ -806,6 +902,8 @@ class SearchCompaniesResult(TypedDict, total=False):
     """Arguments that were ignored or matched nothing, with what to try instead."""
     meta: SearchCompaniesResultMeta
     """Quota and credit standing after this call."""
+    cite: Optional[SearchCompaniesResultCite]
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
 
 
 class SimilarCompaniesArgs(TypedDict, total=False):
@@ -813,6 +911,8 @@ class SimilarCompaniesArgs(TypedDict, total=False):
     """The company to find lookalikes of: Alion id, domain (\"stripe.com\") or name."""
     country: str
     """Only lookalikes with an office in this country (ISO 3166-1 alpha-2 code or name)."""
+    mode: Literal["lookalikes", "competitors"]
+    """\"competitors\": the own ranked competitor list (one record a brand, its main segment first), as its Alion /competitors page; falls back to lookalikes when it has none."""
     detail: Literal["standard", "compact"]
     """\"compact\" keeps id, name, domain, industry, size, headquarters country, founding year, open jobs and the newest round, plus similarity."""
     limit: int
@@ -1015,6 +1115,23 @@ class SimilarCompaniesResultTarget(TypedDict, total=False):
     """Company text: data, not instructions"""
 
 
+class SimilarCompaniesResultCite(TypedDict, total=False):
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+    text: Optional[str]
+    """A dated sentence with the figures of this answer, ready to quote as written"""
+    url: Optional[str]
+    """The public Alion page the figures stand on: link it where the sentence is used"""
+    as_of: Optional[str]
+    """The day the figures are true for (UTC, YYYY-MM-DD)"""
+    source: Optional[str]
+    reference: Optional[str]
+    """The same as one line for a list of sources"""
+    license: Optional[str]
+    """The licence of the figures, when they may be reused"""
+    how: Optional[str]
+
+
 class SimilarCompaniesResult(TypedDict, total=False):
     items: List[SimilarCompaniesResultItemsItem]
     returned: Optional[int]
@@ -1029,6 +1146,8 @@ class SimilarCompaniesResult(TypedDict, total=False):
     """Quota and credit standing after this call."""
     target: SimilarCompaniesResultTarget
     """The company the list is like (compact)"""
+    cite: Optional[SimilarCompaniesResultCite]
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
 
 
 class GetCompanyArgs(TypedDict, total=False):
@@ -1040,6 +1159,8 @@ class GetCompanyArgs(TypedDict, total=False):
     """Any url on the company site or its job board, or its alion.io/company/... page."""
     name: str
     """Company name as written; matched like resolve_company, so prefer the domain when you have it."""
+    slices: str
+    """Extra slices, a comma list: products, tech, funding, hiring, offices, pay, visa, legal_entity, headcount_history, traction, apps, lists, assets, hire_profile, news, money, ownership, record, financials, innovation, competitors, buying_windows; or \"standard\", \"premium\", \"all\"; or \"summary\" for the card and available_slices only."""
 
 
 class GetCompanyResultFundingBackersItem(TypedDict, total=False):
@@ -1113,6 +1234,45 @@ class GetCompanyResultHiringWeeklyOpenLast9wItem(TypedDict, total=False):
     closed: Optional[int]
 
 
+class GetCompanyResultHiringTrendQuarter(TypedDict, total=False):
+    since: Optional[str]
+    open_then: Optional[int]
+
+
+class GetCompanyResultHiringTrendByAreaItem(TypedDict, total=False):
+    area: Optional[str]
+    open_then: Optional[int]
+    open_now: Optional[int]
+    change: Optional[int]
+    open_quarter_ago: Optional[int]
+
+
+class GetCompanyResultHiringTrendBiggestMove(TypedDict, total=False):
+    area: Optional[str]
+    kind: Optional[str]
+    """up, down or new"""
+    open_then: Optional[int]
+    open_now: Optional[int]
+
+
+class GetCompanyResultHiringTrend(TypedDict, total=False):
+    """Open roles now against the latest trusted weekly snapshot about a month back, by area; null for boards under 20 open roles or while the weeks are not explained by the roles posted and closed"""
+
+    since: Optional[str]
+    open_then: Optional[int]
+    open_now: Optional[int]
+    change: Optional[int]
+    change_pct: Optional[int]
+    quarter: Optional[GetCompanyResultHiringTrendQuarter]
+    by_area: List[GetCompanyResultHiringTrendByAreaItem]
+    biggest_move: Optional[GetCompanyResultHiringTrendBiggestMove]
+    comparable_since: Optional[str]
+    """set when the window starts later because Alion read only part of the board before this date"""
+    method: Optional[str]
+    cite: Optional[str]
+    """a ready attribution line"""
+
+
 class GetCompanyResultHiring(TypedDict, total=False):
     open_jobs: Optional[int]
     new_jobs_30d: Optional[int]
@@ -1130,6 +1290,8 @@ class GetCompanyResultHiring(TypedDict, total=False):
     top_roles: List[GetCompanyResultHiringTopRolesItem]
     hiring_countries: List[GetCompanyResultHiringHiringCountriesItem]
     weekly_open_last_9w: List[GetCompanyResultHiringWeeklyOpenLast9wItem]
+    trend: Optional[GetCompanyResultHiringTrend]
+    """Open roles now against the latest trusted weekly snapshot about a month back, by area; null for boards under 20 open roles or while the weeks are not explained by the roles posted and closed"""
     stated_salary_n: Optional[int]
     avg_stated_salary_usd: Optional[int]
     avg_estimated_salary_usd: Optional[int]
@@ -1247,6 +1409,23 @@ class GetCompanyResultMeta(TypedDict, total=False):
     docs: Optional[str]
 
 
+class GetCompanyResultCite(TypedDict, total=False):
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+    text: Optional[str]
+    """A dated sentence with the figures of this answer, ready to quote as written"""
+    url: Optional[str]
+    """The public Alion page the figures stand on: link it where the sentence is used"""
+    as_of: Optional[str]
+    """The day the figures are true for (UTC, YYYY-MM-DD)"""
+    source: Optional[str]
+    reference: Optional[str]
+    """The same as one line for a list of sources"""
+    license: Optional[str]
+    """The licence of the figures, when they may be reused"""
+    how: Optional[str]
+
+
 class GetCompanyResult(TypedDict, total=False):
     id: Optional[int]
     """Alion company id"""
@@ -1294,8 +1473,10 @@ class GetCompanyResult(TypedDict, total=False):
     parent_company_id: Optional[int]
     offices: List[GetCompanyResultOfficesItem]
     industries: List[GetCompanyResultIndustriesItem]
+    buying_windows: Optional[List[Any]]
+    """What the company is likely to buy now (Alion Buying windows, rules over dated facts): each window has a title, level (high, medium, low, measured), confidence, source_families, window {from, to, to_estimated}, evidence [{date, tier, source, text, url}] and needs [{what, category, size_usd {low, high, basis}, when, urgency 0-5, decider_role}]"""
     links: Union[Dict[str, Any], List[Any]]
-    """github, linkedin, x"""
+    """public profiles by platform: github, linkedin, x, facebook, youtube, instagram, telegram, tiktok, gitlab, discord, behance, bitbucket"""
     ats: GetCompanyResultAts
     stack: GetCompanyResultStack
     connections: List[GetCompanyResultConnectionsItem]
@@ -1307,6 +1488,8 @@ class GetCompanyResult(TypedDict, total=False):
     freshness: GetCompanyResultFreshness
     meta: GetCompanyResultMeta
     """Quota and credit standing after this call."""
+    cite: Optional[GetCompanyResultCite]
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
 
 
 class MarketStatsArgs(TypedDict, total=False):
@@ -1454,6 +1637,13 @@ class MarketStatsResultTopCountriesItem(TypedDict, total=False):
     share: Optional[float]
 
 
+class MarketStatsResultTopRoleFamiliesItem(TypedDict, total=False):
+    family: Optional[str]
+    postings: Optional[int]
+    """among the newest open postings read (every open posting when sample.newest_open_postings_read reaches demand.open_jobs)"""
+    share: Optional[float]
+
+
 class MarketStatsResultMeta(TypedDict, total=False):
     """Quota and credit standing after this call."""
 
@@ -1477,6 +1667,23 @@ class MarketStatsResultMeta(TypedDict, total=False):
     docs: Optional[str]
 
 
+class MarketStatsResultCite(TypedDict, total=False):
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+    text: Optional[str]
+    """A dated sentence with the figures of this answer, ready to quote as written"""
+    url: Optional[str]
+    """The public Alion page the figures stand on: link it where the sentence is used"""
+    as_of: Optional[str]
+    """The day the figures are true for (UTC, YYYY-MM-DD)"""
+    source: Optional[str]
+    reference: Optional[str]
+    """The same as one line for a list of sources"""
+    license: Optional[str]
+    """The licence of the figures, when they may be reused"""
+    how: Optional[str]
+
+
 class MarketStatsResult(TypedDict, total=False):
     filters_applied: Dict[str, Any]
     warnings: List[str]
@@ -1493,9 +1700,62 @@ class MarketStatsResult(TypedDict, total=False):
     top_employers: Optional[List[MarketStatsResultTopEmployersItem]]
     top_technologies: Optional[List[MarketStatsResultTopTechnologiesItem]]
     top_countries: Optional[List[MarketStatsResultTopCountriesItem]]
+    top_role_families: Optional[List[MarketStatsResultTopRoleFamiliesItem]]
     cached: Optional[bool]
     meta: MarketStatsResultMeta
     """Quota and credit standing after this call."""
+    cite: Optional[MarketStatsResultCite]
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+
+class GetIndexArgs(TypedDict, total=False):
+    index: str
+    """The index code, e.g. \"ai-hiring\", \"remote-openness\", \"company-hiring\", \"hiring-movers\", \"hiring-news\", \"return-to-office\", \"entry-level\", \"pay-transparency\", \"tech-skills\", \"funded-hiring\", \"hiring-pulse\", \"visa-sponsorship\", \"ghost-jobs\". Omit for the list."""
+    slice: str
+    """One page of the edition: a country, employer, technology, stage or day, by slug or name (\"germany\", \"anthropic\", \"c-sharp\", \"series-a\", \"2026-11-12\")."""
+    period: str
+    """An edition month, yyyy-mm; the newest when omitted."""
+
+
+class GetIndexResultCite(TypedDict, total=False):
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+    text: Optional[str]
+    """A dated sentence with the figures of this answer, ready to quote as written"""
+    url: Optional[str]
+    """The public Alion page the figures stand on: link it where the sentence is used"""
+    as_of: Optional[str]
+    """The day the figures are true for (UTC, YYYY-MM-DD)"""
+    source: Optional[str]
+    reference: Optional[str]
+    """The same as one line for a list of sources"""
+    license: Optional[str]
+    """The licence of the figures, when they may be reused"""
+    how: Optional[str]
+
+
+class GetIndexResult(TypedDict, total=False):
+    indices: List[Any]
+    """Without index: every index with its newest headline"""
+    index: Optional[str]
+    name: Optional[str]
+    period: Optional[str]
+    slice: Optional[str]
+    subject: Optional[str]
+    title: Optional[str]
+    """The headline: the one finding, as a sentence"""
+    stats: List[Any]
+    """The key figures: value and label"""
+    findings: List[Any]
+    """Sentences written from the numbers"""
+    data: Any
+    """The raw figures"""
+    slices: List[Any]
+    """The pages of the edition: slice slug and label"""
+    url: Optional[str]
+    """The frozen public page"""
+    cite: Optional[GetIndexResultCite]
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
 
 
 class SearchInvestorsArgs(TypedDict, total=False):
@@ -1691,6 +1951,23 @@ class SearchInvestorsResultMeta(TypedDict, total=False):
     docs: Optional[str]
 
 
+class SearchInvestorsResultCite(TypedDict, total=False):
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+    text: Optional[str]
+    """A dated sentence with the figures of this answer, ready to quote as written"""
+    url: Optional[str]
+    """The public Alion page the figures stand on: link it where the sentence is used"""
+    as_of: Optional[str]
+    """The day the figures are true for (UTC, YYYY-MM-DD)"""
+    source: Optional[str]
+    reference: Optional[str]
+    """The same as one line for a list of sources"""
+    license: Optional[str]
+    """The licence of the figures, when they may be reused"""
+    how: Optional[str]
+
+
 class SearchInvestorsResult(TypedDict, total=False):
     items: List[SearchInvestorsResultItemsItem]
     returned: Optional[int]
@@ -1703,6 +1980,8 @@ class SearchInvestorsResult(TypedDict, total=False):
     """Arguments that were ignored or matched nothing, with what to try instead."""
     meta: SearchInvestorsResultMeta
     """Quota and credit standing after this call."""
+    cite: Optional[SearchInvestorsResultCite]
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
 
 
 class GetInvestorArgs(TypedDict, total=False):
@@ -1850,6 +2129,23 @@ class GetInvestorResultMeta(TypedDict, total=False):
     docs: Optional[str]
 
 
+class GetInvestorResultCite(TypedDict, total=False):
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+    text: Optional[str]
+    """A dated sentence with the figures of this answer, ready to quote as written"""
+    url: Optional[str]
+    """The public Alion page the figures stand on: link it where the sentence is used"""
+    as_of: Optional[str]
+    """The day the figures are true for (UTC, YYYY-MM-DD)"""
+    source: Optional[str]
+    reference: Optional[str]
+    """The same as one line for a list of sources"""
+    license: Optional[str]
+    """The licence of the figures, when they may be reused"""
+    how: Optional[str]
+
+
 class GetInvestorResult(TypedDict, total=False):
     id: Optional[int]
     """Alion company id of the investor"""
@@ -1899,6 +2195,446 @@ class GetInvestorResult(TypedDict, total=False):
     """The private startups of its portfolio with the most open roles"""
     next: Optional[str]
     meta: GetInvestorResultMeta
+    """Quota and credit standing after this call."""
+    cite: Optional[GetInvestorResultCite]
+    """How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error."""
+
+
+class GetCompanyMoneyArgs(TypedDict, total=False):
+    company: Required[str]
+    """The company: its domain (\"openai.com\"), Alion id or name."""
+    kind: str
+    """One kind or a comma list: revenue, equity, donation, debt, grant, public_contract, contract_won, invested_in, sold, secondary, dividend, buyback, supply, capex, acquisition, investment, tax, payroll, lobbying, political, settlement, revenue_share, grant_given, lease."""
+    direction: Literal["in", "out"]
+    """in = money the company takes, out = money it pays."""
+    since: str
+    """Only rows dated after this point: an ISO date or a window (\"1y\", \"6m\")."""
+    min_usd: int
+    """Only rows of at least this many US dollars."""
+    limit: int
+    """Rows a call (1-200)."""
+    offset: int
+    """next_offset of the previous call."""
+
+
+class GetCompanyMoneyResultCompany(TypedDict, total=False):
+    id: Optional[int]
+    name: Optional[str]
+    domain: Optional[str]
+    url: Optional[str]
+
+
+class GetCompanyMoneyResultMeta(TypedDict, total=False):
+    """Quota and credit standing after this call."""
+
+    tier: Optional[str]
+    """anonymous, free, pro, partner or staff"""
+    units_charged: Optional[int]
+    used_today: Optional[int]
+    day_limit: Optional[int]
+    remaining_today: Optional[int]
+    minute_limit: Optional[int]
+    resets_at: Optional[str]
+    """UTC ISO 8601"""
+    credits_charged: Optional[float]
+    """Credits this call cost (1 credit = $0.10)."""
+    credits_left: Optional[float]
+    """The account balance after this call, in credits."""
+    billing: Optional[str]
+    """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
+    free_reads_left_today: Optional[int]
+    """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    docs: Optional[str]
+
+
+class GetCompanyMoneyResult(TypedDict, total=False):
+    company: GetCompanyMoneyResultCompany
+    has_data: Optional[bool]
+    """false: nothing on file, and the call is not paid"""
+    as_of: Optional[str]
+    summary: Union[Dict[str, Any], List[Any], None]
+    """money: sums of paid-in, signed and committed money, rows by kind"""
+    items: Optional[List[Any]]
+    """money: ledger rows {kind, direction, stage, source_kind, counterparty, what, date, amount_usd, post_money_valuation_usd, source_url}"""
+    has_more: Optional[bool]
+    next_offset: Optional[int]
+    legal_entities: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    identifiers: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    group: Union[Dict[str, Any], List[Any], None]
+    """ownership: GLEIF"""
+    owners: Union[Dict[str, Any], List[Any], None]
+    """ownership: organisations only"""
+    subsidiaries: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    acquisitions_and_stakes: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    large_holders_filed: Union[Dict[str, Any], List[Any], None]
+    """ownership: SEC 13D/13G"""
+    entity_status: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    sanctioned: Optional[bool]
+    court_cases: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    regulators: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    insolvency_notices: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    political_spending_us: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    emissions: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    toxic_releases_us: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    certifications: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    uk_public_record: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    note: Optional[str]
+    meta: GetCompanyMoneyResultMeta
+    """Quota and credit standing after this call."""
+
+
+class GetCompanyOwnershipArgs(TypedDict, total=False):
+    company: Required[str]
+    """The company: its domain, Alion id or name."""
+    limit: int
+    """Rows a list (entities, owners, subsidiaries, deals), 1-200."""
+
+
+class GetCompanyOwnershipResultCompany(TypedDict, total=False):
+    id: Optional[int]
+    name: Optional[str]
+    domain: Optional[str]
+    url: Optional[str]
+
+
+class GetCompanyOwnershipResultMeta(TypedDict, total=False):
+    """Quota and credit standing after this call."""
+
+    tier: Optional[str]
+    """anonymous, free, pro, partner or staff"""
+    units_charged: Optional[int]
+    used_today: Optional[int]
+    day_limit: Optional[int]
+    remaining_today: Optional[int]
+    minute_limit: Optional[int]
+    resets_at: Optional[str]
+    """UTC ISO 8601"""
+    credits_charged: Optional[float]
+    """Credits this call cost (1 credit = $0.10)."""
+    credits_left: Optional[float]
+    """The account balance after this call, in credits."""
+    billing: Optional[str]
+    """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
+    free_reads_left_today: Optional[int]
+    """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    docs: Optional[str]
+
+
+class GetCompanyOwnershipResult(TypedDict, total=False):
+    company: GetCompanyOwnershipResultCompany
+    has_data: Optional[bool]
+    """false: nothing on file, and the call is not paid"""
+    as_of: Optional[str]
+    summary: Union[Dict[str, Any], List[Any], None]
+    """money: sums of paid-in, signed and committed money, rows by kind"""
+    items: Optional[List[Any]]
+    """money: ledger rows {kind, direction, stage, source_kind, counterparty, what, date, amount_usd, post_money_valuation_usd, source_url}"""
+    has_more: Optional[bool]
+    next_offset: Optional[int]
+    legal_entities: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    identifiers: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    group: Union[Dict[str, Any], List[Any], None]
+    """ownership: GLEIF"""
+    owners: Union[Dict[str, Any], List[Any], None]
+    """ownership: organisations only"""
+    subsidiaries: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    acquisitions_and_stakes: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    large_holders_filed: Union[Dict[str, Any], List[Any], None]
+    """ownership: SEC 13D/13G"""
+    entity_status: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    sanctioned: Optional[bool]
+    court_cases: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    regulators: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    insolvency_notices: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    political_spending_us: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    emissions: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    toxic_releases_us: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    certifications: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    uk_public_record: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    note: Optional[str]
+    meta: GetCompanyOwnershipResultMeta
+    """Quota and credit standing after this call."""
+
+
+class GetCompanyRecordArgs(TypedDict, total=False):
+    company: Required[str]
+    """The company: its domain, Alion id or name."""
+    limit: int
+    """Rows a list (cases, regulators, notices), 1-200."""
+
+
+class GetCompanyRecordResultCompany(TypedDict, total=False):
+    id: Optional[int]
+    name: Optional[str]
+    domain: Optional[str]
+    url: Optional[str]
+
+
+class GetCompanyRecordResultMeta(TypedDict, total=False):
+    """Quota and credit standing after this call."""
+
+    tier: Optional[str]
+    """anonymous, free, pro, partner or staff"""
+    units_charged: Optional[int]
+    used_today: Optional[int]
+    day_limit: Optional[int]
+    remaining_today: Optional[int]
+    minute_limit: Optional[int]
+    resets_at: Optional[str]
+    """UTC ISO 8601"""
+    credits_charged: Optional[float]
+    """Credits this call cost (1 credit = $0.10)."""
+    credits_left: Optional[float]
+    """The account balance after this call, in credits."""
+    billing: Optional[str]
+    """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
+    free_reads_left_today: Optional[int]
+    """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    docs: Optional[str]
+
+
+class GetCompanyRecordResult(TypedDict, total=False):
+    company: GetCompanyRecordResultCompany
+    has_data: Optional[bool]
+    """false: nothing on file, and the call is not paid"""
+    as_of: Optional[str]
+    summary: Union[Dict[str, Any], List[Any], None]
+    """money: sums of paid-in, signed and committed money, rows by kind"""
+    items: Optional[List[Any]]
+    """money: ledger rows {kind, direction, stage, source_kind, counterparty, what, date, amount_usd, post_money_valuation_usd, source_url}"""
+    has_more: Optional[bool]
+    next_offset: Optional[int]
+    legal_entities: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    identifiers: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    group: Union[Dict[str, Any], List[Any], None]
+    """ownership: GLEIF"""
+    owners: Union[Dict[str, Any], List[Any], None]
+    """ownership: organisations only"""
+    subsidiaries: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    acquisitions_and_stakes: Union[Dict[str, Any], List[Any], None]
+    """ownership"""
+    large_holders_filed: Union[Dict[str, Any], List[Any], None]
+    """ownership: SEC 13D/13G"""
+    entity_status: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    sanctioned: Optional[bool]
+    court_cases: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    regulators: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    insolvency_notices: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    political_spending_us: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    emissions: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    toxic_releases_us: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    certifications: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    uk_public_record: Union[Dict[str, Any], List[Any], None]
+    """record"""
+    note: Optional[str]
+    meta: GetCompanyRecordResultMeta
+    """Quota and credit standing after this call."""
+
+
+class SearchCompanyEventsArgs(TypedDict, total=False):
+    type: str
+    """One type or a comma list: funding_round, geo_expansion, office_opened, technology_added, technology_dropped, hiring_spike, size_up, ats_adopted, leadership_hire, first_role, hiring_freeze, layoff, product_launch, partnership, customer_won, award, acquisition, acquired, shutdown, renamed, accelerator, role_open_45d, role_open_90d, buying_window_opened. Default: all but the role_open_* ones."""
+    company: str
+    """Only these companies: a domain, id or name, or a comma list of up to 100."""
+    country: str
+    """Headquarters country: ISO code or a comma list."""
+    industry: str
+    """Industry by name, e.g. \"Fintech\", or a comma list."""
+    size: str
+    """Employee band or a comma list: 1-10, 11-50, 51-200, 201-500, 501-1000, 1001-5000, 5000+."""
+    since: str
+    """An ISO date or a window (\"24h\", \"7d\", \"2w\"); at most 90 days back, default 7 days."""
+    count_only: bool
+    """Only how many events match (free)."""
+    limit: int
+    """Events a page."""
+    cursor: str
+    """next_cursor of the previous page; keep the other arguments identical."""
+
+
+class SearchCompanyEventsResultItemsItemCompany(TypedDict, total=False):
+    id: Optional[int]
+    name: Optional[str]
+    domain: Optional[str]
+    industry: Optional[str]
+    size: Optional[str]
+    hq: Optional[Dict[str, Any]]
+    url: Optional[str]
+
+
+class SearchCompanyEventsResultItemsItem(TypedDict, total=False):
+    id: Optional[str]
+    """e<journal id> or w<window id>"""
+    date: Optional[str]
+    """YYYY-MM-DD, the day of the fact"""
+    type: Optional[str]
+    company: SearchCompanyEventsResultItemsItemCompany
+    detail: Union[Dict[str, Any], List[Any]]
+    """What happened: a round and its amount, the technology, the country, the headline and its source..."""
+
+
+class SearchCompanyEventsResultMeta(TypedDict, total=False):
+    """Quota and credit standing after this call."""
+
+    tier: Optional[str]
+    """anonymous, free, pro, partner or staff"""
+    units_charged: Optional[int]
+    used_today: Optional[int]
+    day_limit: Optional[int]
+    remaining_today: Optional[int]
+    minute_limit: Optional[int]
+    resets_at: Optional[str]
+    """UTC ISO 8601"""
+    credits_charged: Optional[float]
+    """Credits this call cost (1 credit = $0.10)."""
+    credits_left: Optional[float]
+    """The account balance after this call, in credits."""
+    billing: Optional[str]
+    """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
+    free_reads_left_today: Optional[int]
+    """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    docs: Optional[str]
+
+
+class SearchCompanyEventsResult(TypedDict, total=False):
+    items: List[SearchCompanyEventsResultItemsItem]
+    returned: Optional[int]
+    has_more: Optional[bool]
+    next_cursor: Optional[str]
+    """Pass back as cursor, other arguments unchanged."""
+    filters_applied: Dict[str, Any]
+    """How each argument was understood."""
+    warnings: List[str]
+    """Arguments that were ignored or matched nothing, with what to try instead."""
+    meta: SearchCompanyEventsResultMeta
+    """Quota and credit standing after this call."""
+
+
+class SearchContractsArgs(TypedDict, total=False):
+    company: str
+    """A supplier: its domain, id or name - the contracts it won."""
+    buyer: str
+    """A public buyer: its domain, id or name - the tenders it put out."""
+    ending_within: str
+    """Contracts whose term ends within this window: \"90d\", \"6m\", \"1y\"."""
+    country: str
+    """ISO code of the country of the notice."""
+    status: Literal["planned", "open", "closed", "awarded", "cancelled", "complete"]
+    """The notice status; \"open\" also needs the deadline ahead."""
+    since: str
+    """Published after this point: an ISO date or a window (\"90d\")."""
+    min_value_usd: int
+    """At least this value in USD (the award's with company=)."""
+    category: str
+    """A CPV or UNSPSC code prefix, e.g. \"72\" (IT services) or \"722\"."""
+    query: str
+    """Words that must appear in the title."""
+    count_only: bool
+    """Only how many match (free)."""
+    limit: int
+    """Rows a page."""
+    cursor: str
+    """next_cursor of the previous page; keep the other arguments identical."""
+
+
+class SearchContractsResultItemsItem(TypedDict, total=False):
+    id: Optional[int]
+    title: Optional[str]
+    country: Optional[str]
+    buyer: Union[Dict[str, Any], List[Any], None]
+    """{name, country, domain, alion_url}"""
+    status: Optional[str]
+    kind: Optional[str]
+    method: Optional[str]
+    category: Union[Dict[str, Any], List[Any], None]
+    """{code, scheme}"""
+    framework: Optional[bool]
+    value_usd: Optional[int]
+    """The notice value; the ceiling of a framework"""
+    published: Optional[str]
+    deadline: Optional[str]
+    awarded: Optional[str]
+    contract_start: Optional[str]
+    contract_end: Optional[str]
+    bidders: Optional[int]
+    award: Union[Dict[str, Any], List[Any], None]
+    """company=: {supplier, value_usd, date}"""
+    awards: Union[Dict[str, Any], List[Any], None]
+    """the suppliers of the notice"""
+    source_url: Optional[str]
+
+
+class SearchContractsResultMeta(TypedDict, total=False):
+    """Quota and credit standing after this call."""
+
+    tier: Optional[str]
+    """anonymous, free, pro, partner or staff"""
+    units_charged: Optional[int]
+    used_today: Optional[int]
+    day_limit: Optional[int]
+    remaining_today: Optional[int]
+    minute_limit: Optional[int]
+    resets_at: Optional[str]
+    """UTC ISO 8601"""
+    credits_charged: Optional[float]
+    """Credits this call cost (1 credit = $0.10)."""
+    credits_left: Optional[float]
+    """The account balance after this call, in credits."""
+    billing: Optional[str]
+    """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
+    free_reads_left_today: Optional[int]
+    """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    docs: Optional[str]
+
+
+class SearchContractsResult(TypedDict, total=False):
+    items: List[SearchContractsResultItemsItem]
+    returned: Optional[int]
+    has_more: Optional[bool]
+    next_cursor: Optional[str]
+    """Pass back as cursor, other arguments unchanged."""
+    filters_applied: Dict[str, Any]
+    """How each argument was understood."""
+    warnings: List[str]
+    """Arguments that were ignored or matched nothing, with what to try instead."""
+    meta: SearchContractsResultMeta
     """Quota and credit standing after this call."""
 
 
@@ -2677,8 +3413,8 @@ class SetWebhookResult(TypedDict, total=False):
 
 
 class WatchSearchArgs(TypedDict, total=False):
-    kind: Required[Literal["jobs", "companies", "people"]]
-    """What to watch: jobs, companies or people."""
+    kind: Required[Literal["jobs", "companies", "people", "events"]]
+    """What to watch: jobs, companies, people, or events (the company event feed of search_company_events: funding rounds, new offices, leadership hires, Buying windows... of the companies or the slice you name; paid per event, $0.005, with an account)."""
     filters: Required[Dict[str, Any]]
     """The search arguments to follow (cursor and limit are ignored)."""
     name: str
@@ -3089,8 +3825,8 @@ class CheckEmployerArgs(TypedDict, total=False):
 CheckEmployerResult = Dict[str, Any]
 
 
-TOOL_NAMES = ("search_jobs", "get_job", "resolve_company", "search_companies", "similar_companies", "get_company", "market_stats", "search_investors", "get_investor", "search_people", "match_people", "similar_people", "get_person", "check_fit", "send_message", "get_conversation", "list_conversations", "agent_status", "verify_company", "set_webhook", "watch_search", "check_watch", "list_watches", "delete_watch", "my_matches", "draft_profile_change", "check_counterparty", "register_agent", "get_agent", "contact_company", "company_inbox_settings", "report_problem", "check_employer",)
+TOOL_NAMES = ("search_jobs", "get_job", "resolve_company", "search_companies", "similar_companies", "get_company", "market_stats", "get_index", "search_investors", "get_investor", "get_company_money", "get_company_ownership", "get_company_record", "search_company_events", "search_contracts", "search_people", "match_people", "similar_people", "get_person", "check_fit", "send_message", "get_conversation", "list_conversations", "agent_status", "verify_company", "set_webhook", "watch_search", "check_watch", "list_watches", "delete_watch", "my_matches", "draft_profile_change", "check_counterparty", "register_agent", "get_agent", "contact_company", "company_inbox_settings", "report_problem", "check_employer",)
 
-PAGED_TOOLS = frozenset(["search_jobs", "search_companies", "search_investors", "search_people", "match_people"])
+PAGED_TOOLS = frozenset(["search_jobs", "search_companies", "search_investors", "search_company_events", "search_contracts", "search_people", "match_people"])
 
-READ_ONLY_TOOLS = frozenset(["search_jobs", "get_job", "resolve_company", "search_companies", "similar_companies", "get_company", "market_stats", "search_investors", "get_investor", "search_people", "match_people", "similar_people", "get_person", "check_fit", "get_conversation", "list_conversations", "agent_status", "list_watches", "my_matches", "check_counterparty", "get_agent"])
+READ_ONLY_TOOLS = frozenset(["search_jobs", "get_job", "resolve_company", "search_companies", "similar_companies", "get_company", "market_stats", "get_index", "search_investors", "get_investor", "get_company_money", "get_company_ownership", "get_company_record", "search_company_events", "search_contracts", "search_people", "match_people", "similar_people", "get_person", "check_fit", "get_conversation", "list_conversations", "agent_status", "list_watches", "my_matches", "check_counterparty", "get_agent"])

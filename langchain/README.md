@@ -56,6 +56,11 @@ or `AlionToolkit(api_key="...")`. Calls with a key are paid from your account's 
 | `alion_search_jobs` | `AlionSearchJobs` | Verified job postings by role, country, work mode, pay, technology and visa sponsorship | Yes |
 | `alion_get_job` | `AlionGetJob` | One posting in full | Yes |
 | `alion_market_stats` | `AlionMarketStats` | Demand, pay percentiles, top employers and technologies of a role in a country | Key |
+| `alion_get_company_money` | `AlionGetCompanyMoney` | Money in and out of a company, a source on every row | Key |
+| `alion_get_company_ownership` | `AlionGetCompanyOwnership` | Owners, legal entities, group and subsidiaries | Key |
+| `alion_get_company_record` | `AlionGetCompanyRecord` | The public record for a counterparty check: court cases, regulators, insolvency | Key |
+| `alion_search_company_events` | `AlionSearchCompanyEvents` | What changed at companies: rounds, offices, leadership hires, Buying windows | Key |
+| `alion_search_contracts` | `AlionSearchContracts` | Public contracts and tenders: won by a company, put out by a buyer, ending soon | Key |
 
 Pick a subset with `AlionToolkit(include=["search_companies", "get_company"])`. Arguments and descriptions come from the Alion server's own tool schemas.
 

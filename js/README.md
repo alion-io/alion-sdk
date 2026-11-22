@@ -101,8 +101,11 @@ const tools = await alion.listTools(); // names, descriptions, input and output 
 |---|---|
 | `searchCompanies` | Companies by industry, country, size, founding year, startup, funding stage, investor, technology, ATS, hiring and growth level |
 | `similarCompanies` | Lookalikes of a company |
-| `getCompany` | One company in depth: funding, hiring, stack, offices, visa sponsorship |
-| `resolveCompany` | Which company a name or a domain means |
+| `getCompany` | One company in depth: funding, hiring, stack, offices, visa sponsorship; `slices` adds more (money, ownership, record, financials, patents and trials, competitors, Buying windows...), `slices: 'summary'` lists what holds data and its price |
+| `getCompanyMoney`, `getCompanyOwnership`, `getCompanyRecord` | Money in and out with a source on every row; owners, legal entities and subsidiaries; the public record for a counterparty check |
+| `searchCompanyEvents` | What changed at companies: rounds, new offices, leadership hires, launches, Buying windows (also `watchSearch({ kind: 'events', deliver: 'webhook' })`) |
+| `searchContracts` | Public contracts and tenders: won by a company, put out by a buyer, ending soon |
+| `resolveCompany` | Which company a name, a domain or a registration number (LEI, CIK, VAT...) means |
 | `searchInvestors`, `getInvestor` | Funds, accelerators and angels: what they back, at which stage, how active now |
 | `searchJobs`, `getJob` | Verified job postings |
 | `marketStats` | Demand, pay percentiles, top employers and technologies of a role in a country |
