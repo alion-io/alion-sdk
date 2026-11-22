@@ -54,7 +54,8 @@ test('a call is one JSON-RPC tools/call with the tool arguments, undefined dropp
     assert.equal(body.jsonrpc, '2.0');
     assert.equal(body.method, 'tools/call');
     assert.deepEqual(body.params, { name: 'search_companies', arguments: { industry: 'Fintech', limit: 5 } });
-    assert.equal(init.headers['User-Agent'], `alion-js/${VERSION} my-agent/2.0`);
+    // (" ci" when the tests themselves run in a pipeline: CI is set there)
+    assert.ok([`alion-js/${VERSION} my-agent/2.0`, `alion-js/${VERSION} my-agent/2.0 ci`].includes(init.headers['User-Agent']));
     assert.ok(init.headers['MCP-Protocol-Version']);
 });
 

@@ -71,7 +71,8 @@ def test_a_call_is_one_tools_call_none_dropped():
     body = f.calls[0]["body"]
     assert body["jsonrpc"] == "2.0" and body["method"] == "tools/call"
     assert body["params"] == {"name": "search_companies", "arguments": {"industry": "Fintech", "limit": 5}}
-    assert f.calls[0]["headers"]["User-Agent"] == f"alion-python/{alion.__version__} my-agent/2.0"
+    # (" ci" when the tests themselves run in a pipeline: CI is set there)
+    assert re.fullmatch(rf"alion-python/{re.escape(alion.__version__)} my-agent/2\.0( ci)?", f.calls[0]["headers"]["User-Agent"])
     assert f.calls[0]["headers"]["MCP-Protocol-Version"] == alion.PROTOCOL_VERSION
 
 
