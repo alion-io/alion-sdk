@@ -2640,6 +2640,11 @@ export interface SearchPeopleResult {
     next_cursor?: string | null;
     /** match_people: the vacancy as it was read. */
     vacancy?: unknown;
+    /**
+     * match_people with a vacancy text: what was understood from it - title, role, technologies, seniority,
+     * min_years, work_mode, hires_in.
+     */
+    vacancy_read?: unknown;
     note?: string | null;
     /** How each argument was understood. */
     filters_applied?: unknown;
@@ -2678,6 +2683,13 @@ export interface MatchPeopleArgs {
     job_id?: number;
     /** An alion.io/job/... link. */
     job_url?: string;
+    /**
+     * The vacancy's own text (a job order, a posting from anywhere), up to 20,000 characters; its first short line
+     * is taken as the title.
+     */
+    vacancy?: string;
+    /** With vacancy: the job title, when the text does not open with it. */
+    title?: string;
     /**
      * What the person says they are open to here: a job, freelance projects, a CTO role, a co-founder, angel
      * investing.
@@ -2772,6 +2784,11 @@ export interface MatchPeopleResult {
     next_cursor?: string | null;
     /** match_people: the vacancy as it was read. */
     vacancy?: unknown;
+    /**
+     * match_people with a vacancy text: what was understood from it - title, role, technologies, seniority,
+     * min_years, work_mode, hires_in.
+     */
+    vacancy_read?: unknown;
     note?: string | null;
     /** How each argument was understood. */
     filters_applied?: unknown;
@@ -2857,6 +2874,11 @@ export interface SimilarPeopleResult {
     next_cursor?: string | null;
     /** match_people: the vacancy as it was read. */
     vacancy?: unknown;
+    /**
+     * match_people with a vacancy text: what was understood from it - title, role, technologies, seniority,
+     * min_years, work_mode, hires_in.
+     */
+    vacancy_read?: unknown;
     note?: string | null;
     /** How each argument was understood. */
     filters_applied?: unknown;
@@ -4201,12 +4223,14 @@ export abstract class AlionTools {
     }
 
     /**
-     * The best people for one vacancy: pass job_id or job_url of an Alion vacancy, or describe it (role, technology
-     * as a comma list, country / can_work_in, work_mode, seniority, budget_usd). The role and the place are hard
-     * filters; the technologies rank the people by how many of them they have, and each row says which (why). Use it
-     * when you hire for a concrete role; search_people when you browse. Free; limits by trust: no account 50 profile
-     * reads and 20 searches a day per network, a wallet signed in with SIWX 100 and 50, an Alion account 1,000 and
-     * 200, a verified company 5,000 and 1,000. Docs: https://alion.io/developers/docs
+     * The best people for one vacancy: pass job_id or job_url of an Alion vacancy, paste the vacancy's own text
+     * (vacancy - its role, technologies, level, years and work mode are read from it, vacancy_read shows what was
+     * understood), or describe it (role, technology as a comma list, country / can_work_in, work_mode, seniority,
+     * budget_usd; these also correct what was read from a text). The role and the place are hard filters; the
+     * technologies rank the people by how many of them they have, and each row says which (why). Use it when you
+     * hire for a concrete role; search_people when you browse. Free; limits by trust: no account 50 profile reads
+     * and 20 searches a day per network, a wallet signed in with SIWX 100 and 50, an Alion account 1,000 and 200, a
+     * verified company 5,000 and 1,000. Docs: https://alion.io/developers/docs
      */
     matchPeople(args?: MatchPeopleArgs, options?: CallOptions): Promise<MatchPeopleResult> {
         return this.call("match_people", args ?? {}, options);

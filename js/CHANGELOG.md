@@ -1,5 +1,11 @@
 # Changelog: @alion-io/sdk
 
+## 0.4.1 - 2026-11-23
+
+- `matchPeople({ vacancy })`: paste a vacancy's own text (a job order, a posting from anywhere); the role, technologies, level, years and work mode are read from it and `vacancy_read` says what was understood. Fields sent beside it correct what was read.
+- `getPerson({ person })` also takes the stable `person_id` your ATS keeps.
+- The same people over the REST API: `POST /api/people.match`, `/api/people.search`, `/api/people.get` with your key.
+
 ## 0.4.0 - 2026-11-23
 
 - For recruiting tools: `toCandidateRecord(person)` turns a row of `searchPeople` / `matchPeople` / `similarPeople` or a `getPerson` profile into one flat record keyed by the new stable `person_id`, with the contacts the person gave your account (`contacts_basis`).

@@ -2778,6 +2778,8 @@ class SearchPeopleResult(TypedDict, total=False):
     """Pass back as cursor, other arguments unchanged."""
     vacancy: Any
     """match_people: the vacancy as it was read."""
+    vacancy_read: Any
+    """match_people with a vacancy text: what was understood from it - title, role, technologies, seniority, min_years, work_mode, hires_in."""
     note: Optional[str]
     filters_applied: Any
     """How each argument was understood."""
@@ -2791,6 +2793,10 @@ class MatchPeopleArgs(TypedDict, total=False):
     """An Alion job id."""
     job_url: str
     """An alion.io/job/... link."""
+    vacancy: str
+    """The vacancy's own text (a job order, a posting from anywhere), up to 20,000 characters; its first short line is taken as the title."""
+    title: str
+    """With vacancy: the job title, when the text does not open with it."""
     open_to: Literal["job", "freelance", "cto", "cofounder", "angel"]
     """What the person says they are open to here: a job, freelance projects, a CTO role, a co-founder, angel investing."""
     role: str
@@ -2902,6 +2908,8 @@ class MatchPeopleResult(TypedDict, total=False):
     """Pass back as cursor, other arguments unchanged."""
     vacancy: Any
     """match_people: the vacancy as it was read."""
+    vacancy_read: Any
+    """match_people with a vacancy text: what was understood from it - title, role, technologies, seniority, min_years, work_mode, hires_in."""
     note: Optional[str]
     filters_applied: Any
     """How each argument was understood."""
@@ -2982,6 +2990,8 @@ class SimilarPeopleResult(TypedDict, total=False):
     """Pass back as cursor, other arguments unchanged."""
     vacancy: Any
     """match_people: the vacancy as it was read."""
+    vacancy_read: Any
+    """match_people with a vacancy text: what was understood from it - title, role, technologies, seniority, min_years, work_mode, hires_in."""
     note: Optional[str]
     filters_applied: Any
     """How each argument was understood."""
