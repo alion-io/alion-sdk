@@ -1,0 +1,91 @@
+[
+  {
+    "name": "person_id",
+    "type": "text",
+    "label": "Person ID"
+  },
+  {
+    "name": "person",
+    "type": "text",
+    "label": "Handle"
+  },
+  {
+    "name": "name",
+    "type": "text",
+    "label": "Name"
+  },
+  {
+    "name": "headline",
+    "type": "text",
+    "label": "Headline"
+  },
+  {
+    "name": "stage",
+    "type": "text",
+    "label": "Stage"
+  },
+  {
+    "name": "source",
+    "type": "text",
+    "label": "Source"
+  },
+  {
+    "name": "match_percent",
+    "type": "uinteger",
+    "label": "Fit %"
+  },
+  {
+    "name": "added",
+    "type": "date",
+    "label": "Added"
+  },
+  {
+    "name": "application",
+    "type": "collection",
+    "label": "Application",
+    "spec": [
+      {
+        "name": "note",
+        "type": "text",
+        "label": "Note"
+      },
+      {
+        "name": "pay_usd_year",
+        "type": "uinteger",
+        "label": "Asked pay (USD a year)"
+      }
+    ]
+  },
+  {
+    "name": "contacts",
+    "type": "collection",
+    "label": "Contacts",
+    "spec": [
+      {
+        "name": "phone",
+        "type": "text",
+        "label": "Phone"
+      },
+      {
+        "name": "linkedin",
+        "type": "url",
+        "label": "LinkedIn"
+      },
+      {
+        "name": "github",
+        "type": "url",
+        "label": "GitHub"
+      }
+    ]
+  },
+  {
+    "name": "contacts_basis",
+    "type": "text",
+    "label": "Contacts basis"
+  },
+  {
+    "name": "url",
+    "type": "url",
+    "label": "Profile"
+  }
+]

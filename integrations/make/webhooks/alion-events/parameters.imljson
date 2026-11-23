@@ -1,0 +1,42 @@
+[
+  {
+    "name": "event",
+    "type": "select",
+    "label": "Event",
+    "required": true,
+    "options": [
+      {
+        "label": "Candidate replied",
+        "value": "candidate.replied"
+      },
+      {
+        "label": "Candidate shared contacts",
+        "value": "candidate.consented"
+      },
+      {
+        "label": "Candidate stopped sharing contacts",
+        "value": "candidate.consent_revoked"
+      },
+      {
+        "label": "Candidate asked to be forgotten",
+        "value": "candidate.erased"
+      },
+      {
+        "label": "Candidate added to a shortlist",
+        "value": "shortlist.candidate_added"
+      },
+      {
+        "label": "New matches for a job order",
+        "value": "order.new_matches"
+      },
+      {
+        "label": "Role became hard to fill",
+        "value": "role.became_hard"
+      },
+      {
+        "label": "Buying window opened",
+        "value": "window.opened"
+      }
+    ]
+  }
+]

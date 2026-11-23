@@ -1,0 +1,17 @@
+{
+  "name": "alion-zapier",
+  "version": "0.1.0",
+  "description": "Zapier integration for Alion: triggers on Alion's webhook events (replies, consents, shortlists, new matches for job orders, hard-to-fill roles, erasures) and actions on job orders and people.",
+  "private": true,
+  "license": "MIT",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/app.test.js"
+  },
+  "dependencies": {
+    "zapier-platform-core": "19.2.1"
+  }
+}

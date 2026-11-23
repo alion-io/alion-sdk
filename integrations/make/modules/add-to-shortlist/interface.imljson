@@ -1,0 +1,27 @@
+[
+  {
+    "name": "order_id",
+    "type": "uinteger",
+    "label": "Job order"
+  },
+  {
+    "name": "person_id",
+    "type": "text",
+    "label": "Person ID"
+  },
+  {
+    "name": "added",
+    "type": "boolean",
+    "label": "Added"
+  },
+  {
+    "name": "stage",
+    "type": "text",
+    "label": "Stage"
+  },
+  {
+    "name": "match_percent",
+    "type": "uinteger",
+    "label": "Fit %"
+  }
+]

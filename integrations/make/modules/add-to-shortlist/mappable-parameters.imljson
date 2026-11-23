@@ -1,0 +1,17 @@
+[
+  {
+    "name": "order_id",
+    "type": "select",
+    "label": "Job order",
+    "required": true,
+    "options": "rpc://list-orders",
+    "help": "One of the vacancies your account posted on Alion."
+  },
+  {
+    "name": "person",
+    "type": "text",
+    "label": "Person",
+    "required": true,
+    "help": "The person_id (p_...), the Alion handle or the alion.io/user/... link."
+  }
+]

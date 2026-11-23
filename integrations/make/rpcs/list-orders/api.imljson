@@ -1,0 +1,15 @@
+{
+  "url": "/order.list",
+  "method": "POST",
+  "body": {
+    "status": "all",
+    "limit": 100
+  },
+  "response": {
+    "iterate": "{{body.response.items}}",
+    "output": {
+      "label": "{{item.title}} ({{item.status}})",
+      "value": "{{item.id}}"
+    }
+  }
+}

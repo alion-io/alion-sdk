@@ -1,0 +1,10 @@
+{
+  "url": "/people.get",
+  "method": "POST",
+  "body": {
+    "person": "{{parameters.person}}"
+  },
+  "response": {
+    "output": "{{body.response}}"
+  }
+}

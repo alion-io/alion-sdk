@@ -1,0 +1,14 @@
+{
+  "url": "/people.match",
+  "method": "POST",
+  "body": {
+    "vacancy": "{{parameters.vacancy}}",
+    "job_id": "{{parameters.job_id}}",
+    "can_work_in": "{{parameters.country}}",
+    "limit": "{{ifempty(parameters.limit; 20)}}"
+  },
+  "response": {
+    "iterate": "{{body.response.items}}",
+    "output": "{{item}}"
+  }
+}

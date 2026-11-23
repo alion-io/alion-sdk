@@ -1,0 +1,27 @@
+[
+  {
+    "name": "order_id",
+    "type": "uinteger",
+    "label": "Job order"
+  },
+  {
+    "name": "person_id",
+    "type": "text",
+    "label": "Person ID"
+  },
+  {
+    "name": "stage",
+    "type": "text",
+    "label": "Stage"
+  },
+  {
+    "name": "was",
+    "type": "text",
+    "label": "Was"
+  },
+  {
+    "name": "removed",
+    "type": "boolean",
+    "label": "Removed"
+  }
+]

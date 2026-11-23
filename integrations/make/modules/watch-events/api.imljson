@@ -1,0 +1,9 @@
+{
+  "output": {
+    "id": "{{body.id}}",
+    "event": "{{body.event}}",
+    "created": "{{body.created}}",
+    "test": "{{body.test}}",
+    "data": "{{body.data}}"
+  }
+}

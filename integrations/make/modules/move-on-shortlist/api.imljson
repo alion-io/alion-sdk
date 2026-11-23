@@ -1,0 +1,12 @@
+{
+  "url": "{{if(parameters.remove; '/shortlist.remove'; '/shortlist.stage')}}",
+  "method": "POST",
+  "body": {
+    "order_id": "{{parameters.order_id}}",
+    "person": "{{parameters.person}}",
+    "stage": "{{if(parameters.remove; omit; parameters.stage)}}"
+  },
+  "response": {
+    "output": "{{body.response}}"
+  }
+}

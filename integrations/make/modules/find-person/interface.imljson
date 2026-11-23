@@ -1,0 +1,64 @@
+[
+  {
+    "name": "person_id",
+    "type": "text",
+    "label": "Person ID"
+  },
+  {
+    "name": "person",
+    "type": "text",
+    "label": "Handle"
+  },
+  {
+    "name": "name",
+    "type": "text",
+    "label": "Name"
+  },
+  {
+    "name": "headline",
+    "type": "text",
+    "label": "Headline"
+  },
+  {
+    "name": "summary",
+    "type": "text",
+    "label": "Summary"
+  },
+  {
+    "name": "skills",
+    "type": "array",
+    "label": "Skills"
+  },
+  {
+    "name": "experience",
+    "type": "array",
+    "label": "Experience"
+  },
+  {
+    "name": "contacts",
+    "type": "collection",
+    "label": "Contacts",
+    "spec": [
+      {
+        "name": "phone",
+        "type": "text",
+        "label": "Phone"
+      },
+      {
+        "name": "linkedin",
+        "type": "url",
+        "label": "LinkedIn"
+      },
+      {
+        "name": "github",
+        "type": "url",
+        "label": "GitHub"
+      }
+    ]
+  },
+  {
+    "name": "url",
+    "type": "url",
+    "label": "Profile"
+  }
+]

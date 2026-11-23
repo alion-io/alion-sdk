@@ -1,0 +1,26 @@
+[
+  {
+    "name": "vacancy",
+    "type": "text",
+    "label": "Vacancy text",
+    "multiline": true,
+    "help": "The vacancy's own text: role, technologies, level, years and work mode are read from it."
+  },
+  {
+    "name": "job_id",
+    "type": "uinteger",
+    "label": "Alion job ID",
+    "help": "An Alion vacancy instead of a text."
+  },
+  {
+    "name": "country",
+    "type": "text",
+    "label": "Can work in (ISO code)"
+  },
+  {
+    "name": "limit",
+    "type": "uinteger",
+    "label": "Limit",
+    "default": 20
+  }
+]

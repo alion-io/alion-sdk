@@ -1,0 +1,56 @@
+[
+  {
+    "name": "order_id",
+    "type": "select",
+    "label": "Job order",
+    "required": true,
+    "options": "rpc://list-orders",
+    "help": "One of the vacancies your account posted on Alion."
+  },
+  {
+    "name": "person",
+    "type": "text",
+    "label": "Person",
+    "required": true,
+    "help": "The person_id (p_...), the Alion handle or the alion.io/user/... link."
+  },
+  {
+    "name": "stage",
+    "type": "select",
+    "label": "Stage",
+    "options": [
+      {
+        "label": "New",
+        "value": "new"
+      },
+      {
+        "label": "Screening",
+        "value": "screening"
+      },
+      {
+        "label": "Interview",
+        "value": "interview"
+      },
+      {
+        "label": "Offer",
+        "value": "offer"
+      },
+      {
+        "label": "Hired",
+        "value": "hired"
+      },
+      {
+        "label": "Rejected",
+        "value": "rejected"
+      }
+    ],
+    "help": "A person who applied hears of the move, as on the site."
+  },
+  {
+    "name": "remove",
+    "type": "boolean",
+    "label": "Remove instead",
+    "default": false,
+    "help": "Remove a person your account added (an application stays: move it to Rejected)."
+  }
+]

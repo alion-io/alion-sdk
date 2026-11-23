@@ -1,0 +1,19 @@
+{
+  "url": "https://alion.io/api/webhook.list",
+  "method": "POST",
+  "headers": {
+    "Authorization": "Bearer {{parameters.apiKey}}",
+    "Content-Type": "application/json"
+  },
+  "body": {},
+  "response": {
+    "error": {
+      "message": "[{{statusCode}}] {{ifempty(body.error.error_data.message; body.error.error_msg)}}"
+    }
+  },
+  "log": {
+    "sanitize": [
+      "request.headers.authorization"
+    ]
+  }
+}

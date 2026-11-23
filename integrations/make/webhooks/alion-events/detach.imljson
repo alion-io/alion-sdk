@@ -1,0 +1,7 @@
+{
+  "url": "/webhook.unsubscribe",
+  "method": "POST",
+  "body": {
+    "id": "{{webhook.externalHookId}}"
+  }
+}

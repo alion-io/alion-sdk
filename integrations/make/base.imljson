@@ -1,0 +1,18 @@
+{
+  "baseUrl": "https://alion.io/api",
+  "headers": {
+    "Authorization": "Bearer {{connection.apiKey}}",
+    "Content-Type": "application/json",
+    "User-Agent": "alion-make/0.1.0"
+  },
+  "response": {
+    "error": {
+      "message": "[{{statusCode}}] {{ifempty(body.error.error_data.message; body.error.error_msg)}}"
+    }
+  },
+  "log": {
+    "sanitize": [
+      "request.headers.authorization"
+    ]
+  }
+}

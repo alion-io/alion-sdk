@@ -1,0 +1,21 @@
+{
+  "id": "evt_sample",
+  "event": "shortlist.candidate_added",
+  "created": "2026-11-23T12:00:00Z",
+  "test": true,
+  "data": {
+    "order": {
+      "id": 1234567,
+      "title": "Senior Backend Engineer",
+      "status": "live"
+    },
+    "person": {
+      "person_id": "p_3f9a1c2e7b6d4a80",
+      "person": "sample-backend-engineer",
+      "name": "Sam P."
+    },
+    "source": "sourced",
+    "stage": "new",
+    "match_percent": 84
+  }
+}

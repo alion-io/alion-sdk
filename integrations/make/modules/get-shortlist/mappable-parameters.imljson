@@ -1,0 +1,56 @@
+[
+  {
+    "name": "order_id",
+    "type": "select",
+    "label": "Job order",
+    "required": true,
+    "options": "rpc://list-orders",
+    "help": "One of the vacancies your account posted on Alion."
+  },
+  {
+    "name": "stage",
+    "type": "select",
+    "label": "Stage",
+    "options": [
+      {
+        "label": "New",
+        "value": "new"
+      },
+      {
+        "label": "Screening",
+        "value": "screening"
+      },
+      {
+        "label": "Interview",
+        "value": "interview"
+      },
+      {
+        "label": "Offer",
+        "value": "offer"
+      },
+      {
+        "label": "Hired",
+        "value": "hired"
+      },
+      {
+        "label": "Rejected",
+        "value": "rejected"
+      }
+    ]
+  },
+  {
+    "name": "source",
+    "type": "select",
+    "label": "Source",
+    "options": [
+      {
+        "label": "Applied",
+        "value": "applied"
+      },
+      {
+        "label": "Sourced",
+        "value": "sourced"
+      }
+    ]
+  }
+]

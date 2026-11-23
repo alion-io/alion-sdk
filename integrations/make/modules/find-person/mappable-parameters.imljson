@@ -1,0 +1,9 @@
+[
+  {
+    "name": "person",
+    "type": "text",
+    "label": "Person",
+    "required": true,
+    "help": "The person_id (p_...), the Alion handle or the alion.io/user/... link."
+  }
+]

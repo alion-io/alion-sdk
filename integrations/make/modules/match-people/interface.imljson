@@ -1,0 +1,45 @@
+[
+  {
+    "name": "person_id",
+    "type": "text",
+    "label": "Person ID"
+  },
+  {
+    "name": "person",
+    "type": "text",
+    "label": "Handle"
+  },
+  {
+    "name": "name",
+    "type": "text",
+    "label": "Name"
+  },
+  {
+    "name": "headline",
+    "type": "text",
+    "label": "Headline"
+  },
+  {
+    "name": "seniority",
+    "type": "text",
+    "label": "Seniority"
+  },
+  {
+    "name": "years_experience",
+    "type": "uinteger",
+    "label": "Years"
+  },
+  {
+    "name": "why",
+    "type": "array",
+    "label": "Why",
+    "spec": {
+      "type": "text"
+    }
+  },
+  {
+    "name": "url",
+    "type": "url",
+    "label": "Profile"
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "url": "/shortlist.get",
+  "method": "POST",
+  "body": {
+    "order_id": "{{parameters.order_id}}",
+    "stage": "{{parameters.stage}}",
+    "source": "{{parameters.source}}",
+    "limit": 100
+  },
+  "response": {
+    "iterate": "{{body.response.items}}",
+    "output": "{{item}}"
+  },
+  "pagination": {
+    "body": {
+      "cursor": "{{body.response.next_cursor}}"
+    },
+    "condition": "{{body.response.next_cursor}}"
+  }
+}
