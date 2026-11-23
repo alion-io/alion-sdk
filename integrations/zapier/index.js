@@ -1,7 +1,7 @@
 'use strict';
 
 const zapier = require('zapier-platform-core');
-const { BASE, VERSION } = require('./lib/api');
+const { VERSION, call } = require('./lib/api');
 const events = require('./triggers/events');
 const jobOrder = require('./triggers/job_orders');
 const addToShortlist = require('./creates/add_to_shortlist');
@@ -25,8 +25,13 @@ module.exports = {
   authentication: {
     type: 'custom',
     fields: [{ key: 'api_key', label: 'API Key', required: true, type: 'password', helpText: 'A key from [alion.io/developers/keys](https://alion.io/developers/keys).' }],
-    test: { url: `${BASE}/api/webhook.list`, method: 'POST', body: {}, headers: { 'Content-Type': 'application/json' } },
+    // (a read every key may make: a refused key raises Alion's own words, as the actions do)
+    test: (z) => call(z, 'webhook.list', {}),
+    // (the key's last four characters tell two connections apart; the key itself is never shown)
+    connectionLabel: (z, bundle) => `Alion key …${String((bundle.authData && bundle.authData.api_key) || '').slice(-4)}`,
   },
+  // (the inputs reach the API as the user typed them)
+  flags: { cleanInputData: false },
   beforeRequest: [addKey],
   triggers,
   creates: { [addToShortlist.key]: addToShortlist, [moveOnShortlist.key]: moveOnShortlist },
