@@ -705,6 +705,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -1608,6 +1615,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -2403,6 +2417,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -3100,6 +3121,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -3668,6 +3696,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -5239,6 +5274,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -6002,6 +6044,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -6929,6 +6978,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -7675,6 +7731,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -8096,6 +8159,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -8429,6 +8499,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -8764,6 +8841,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -9026,6 +9110,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -9361,6 +9452,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -9552,6 +9650,13 @@
                     "null"
                   ],
                   "description": "The handle: pass it to get_person, check_fit or send_message."
+                },
+                "person_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The person's stable id (p_...): it never changes, unlike the handle; key your records by it - candidate.erased names it."
                 },
                 "name": {
                   "type": [
@@ -9745,6 +9850,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -9941,6 +10053,13 @@
                   ],
                   "description": "The handle: pass it to get_person, check_fit or send_message."
                 },
+                "person_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The person's stable id (p_...): it never changes, unlike the handle; key your records by it - candidate.erased names it."
+                },
                 "name": {
                   "type": [
                     "string",
@@ -10133,6 +10252,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -10195,6 +10321,13 @@
                   ],
                   "description": "The handle: pass it to get_person, check_fit or send_message."
                 },
+                "person_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The person's stable id (p_...): it never changes, unlike the handle; key your records by it - candidate.erased names it."
+                },
                 "name": {
                   "type": [
                     "string",
@@ -10388,6 +10521,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -10433,6 +10573,81 @@
               "null"
             ],
             "description": "The handle."
+          },
+          "person_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The stable id (p_...), the same in every answer and webhook."
+          },
+          "contacts": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "telegram": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "linkedin": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "x": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "github": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "huggingface": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "description": "Only the contacts the person gave this account (today: an application to its vacancy), as their privacy lets it see them; null otherwise. The email is never served."
+          },
+          "contacts_shared": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "basis": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "applied"
+              },
+              "since": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "UTC ISO 8601"
+              }
+            },
+            "description": "On what the contacts were given, and since when; null when none were."
           },
           "name": {
             "type": [
@@ -10635,6 +10850,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -10843,6 +11065,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -11143,6 +11372,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -11339,6 +11575,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -11507,6 +11750,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -11659,6 +11909,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -11802,6 +12059,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -11941,6 +12205,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -12107,6 +12378,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -12250,6 +12528,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -12360,6 +12645,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -12488,6 +12780,13 @@
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
               },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
               "docs": {
                 "type": [
                   "string",
@@ -12612,6 +12911,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -12760,6 +13066,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -12930,6 +13243,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [
@@ -13177,6 +13497,13 @@
                   "null"
                 ],
                 "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
               },
               "docs": {
                 "type": [

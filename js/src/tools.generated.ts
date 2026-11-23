@@ -226,6 +226,8 @@ export interface SearchJobsResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
     /** How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error. */
@@ -442,6 +444,8 @@ export interface GetJobResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
     /** How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error. */
@@ -652,6 +656,8 @@ export interface ResolveCompanyResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
     /** How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error. */
@@ -885,6 +891,8 @@ export interface SearchCompaniesResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
     /** How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error. */
@@ -1038,6 +1046,8 @@ export interface SimilarCompaniesResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
     /** The company the list is like (compact) */
@@ -1420,6 +1430,8 @@ export interface GetCompanyResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
     /** How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error. */
@@ -1604,6 +1616,8 @@ export interface MarketStatsResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
     /** How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error. */
@@ -1867,6 +1881,8 @@ export interface SearchInvestorsResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
     /** How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error. */
@@ -2048,6 +2064,8 @@ export interface GetInvestorResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
     /** How to quote this answer in a text: the sentence, the page to link, the date. Absent on an error. */
@@ -2165,6 +2183,8 @@ export interface GetCompanyMoneyResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -2253,6 +2273,8 @@ export interface GetCompanyOwnershipResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -2341,6 +2363,8 @@ export interface GetCompanyRecordResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -2422,6 +2446,8 @@ export interface SearchCompanyEventsResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -2512,6 +2538,8 @@ export interface SearchContractsResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -2577,6 +2605,11 @@ export interface SearchPeopleResult {
     items?: {
         /** The handle: pass it to get_person, check_fit or send_message. */
         person?: string | null;
+        /**
+         * The person's stable id (p_...): it never changes, unlike the handle; key your records by it - candidate.erased
+         * names it.
+         */
+        person_id?: string | null;
         /** When the person shows it. */
         name?: string | null;
         headline?: string | null;
@@ -2633,6 +2666,8 @@ export interface SearchPeopleResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -2702,6 +2737,11 @@ export interface MatchPeopleResult {
     items?: {
         /** The handle: pass it to get_person, check_fit or send_message. */
         person?: string | null;
+        /**
+         * The person's stable id (p_...): it never changes, unlike the handle; key your records by it - candidate.erased
+         * names it.
+         */
+        person_id?: string | null;
         /** When the person shows it. */
         name?: string | null;
         headline?: string | null;
@@ -2758,6 +2798,8 @@ export interface MatchPeopleResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -2780,6 +2822,11 @@ export interface SimilarPeopleResult {
     items?: {
         /** The handle: pass it to get_person, check_fit or send_message. */
         person?: string | null;
+        /**
+         * The person's stable id (p_...): it never changes, unlike the handle; key your records by it - candidate.erased
+         * names it.
+         */
+        person_id?: string | null;
         /** When the person shows it. */
         name?: string | null;
         headline?: string | null;
@@ -2836,6 +2883,8 @@ export interface SimilarPeopleResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -2853,6 +2902,27 @@ export interface GetPersonArgs {
 export interface GetPersonResult {
     /** The handle. */
     person?: string | null;
+    /** The stable id (p_...), the same in every answer and webhook. */
+    person_id?: string | null;
+    /**
+     * Only the contacts the person gave this account (today: an application to its vacancy), as their privacy lets
+     * it see them; null otherwise. The email is never served.
+     */
+    contacts?: {
+        phone?: string | null;
+        telegram?: string | null;
+        linkedin?: string | null;
+        x?: string | null;
+        github?: string | null;
+        huggingface?: string | null;
+    } | null;
+    /** On what the contacts were given, and since when; null when none were. */
+    contacts_shared?: {
+        /** applied */
+        basis?: string | null;
+        /** UTC ISO 8601 */
+        since?: string | null;
+    } | null;
     name?: string | null;
     photo?: string | null;
     headline?: string | null;
@@ -2909,6 +2979,8 @@ export interface GetPersonResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -2973,6 +3045,8 @@ export interface CheckFitResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3072,6 +3146,8 @@ export interface SendMessageResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3126,6 +3202,8 @@ export interface GetConversationResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3171,6 +3249,8 @@ export interface ListConversationsResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3215,6 +3295,8 @@ export interface AgentStatusResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3257,6 +3339,8 @@ export interface VerifyCompanyResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3297,6 +3381,8 @@ export interface SetWebhookResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3352,6 +3438,8 @@ export interface WatchSearchResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3392,6 +3480,8 @@ export interface CheckWatchResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3425,6 +3515,8 @@ export interface ListWatchesResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3462,6 +3554,8 @@ export interface DeleteWatchResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3499,6 +3593,8 @@ export interface MyMatchesResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3541,6 +3637,8 @@ export interface DraftProfileChangeResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3591,6 +3689,8 @@ export interface CheckCounterpartyResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }
@@ -3665,6 +3765,8 @@ export interface GetAgentResult {
         billing?: string | null;
         /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
         free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
         docs?: string | null;
     };
 }

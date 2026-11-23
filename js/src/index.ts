@@ -1,6 +1,9 @@
 export { Alion, PROTOCOL_VERSION } from './client.js';
 export type { AlionOptions, EnrichedCompany, EnrichResult } from './client.js';
 export { verifyWebhook, toCSV, flatten } from './helpers.js';
+export type { VerifyWebhookOptions } from './helpers.js';
+export { toCandidateRecord, parseWebhook, WEBHOOK_EVENTS } from './people.js';
+export type { CandidateRecord, WebhookEvent, WebhookEventName, WebhookData, WebhookPerson } from './people.js';
 export { AlionError } from './errors.js';
 export { VERSION } from './version.js';
 export { PAGED_TOOLS, READ_ONLY_TOOLS } from './tools.generated.js';

@@ -93,6 +93,18 @@ import { verifyWebhook } from '@alion-io/sdk';
 const ok = await verifyWebhook(rawBody, request.headers.get('x-alion-signature'), process.env.ALION_WEBHOOK_SECRET!);
 ```
 
+**For recruiting tools** (ATS, CRM): people rows as flat records keyed by the stable `person_id`, and the account webhooks of [alion.io/developers/webhooks](https://alion.io/developers/webhooks) (`candidate.replied`, `candidate.consented`, `candidate.erased`, `role.became_hard`, ...) checked and typed in one call:
+
+```ts
+import { toCandidateRecord, parseWebhook } from '@alion-io/sdk';
+
+const { items } = await alion.matchPeople({ role: 'Backend', technology: 'Python,Kubernetes', can_work_in: 'US' });
+const rows = items.map(toCandidateRecord);   // person_id, handle, name, skills, current_job, the contacts you were given...
+
+const event = await parseWebhook(rawBody, request.headers.get('x-alion-signature'), process.env.ALION_WEBHOOK_SECRET!);
+if (event.event === 'candidate.erased') await ats.remove(event.data.person.person_id);
+```
+
 **A budget**: `new Alion({ maxCredits: 50 })` refuses a call that could pass 50 credits ($5) in this process; `alion.creditsSpent` says what was charged.
 
 **To CSV**:

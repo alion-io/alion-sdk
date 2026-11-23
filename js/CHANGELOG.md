@@ -1,5 +1,12 @@
 # Changelog: @alion-io/sdk
 
+## 0.4.0 - 2026-11-23
+
+- For recruiting tools: `toCandidateRecord(person)` turns a row of `searchPeople` / `matchPeople` / `similarPeople` or a `getPerson` profile into one flat record keyed by the new stable `person_id`, with the contacts the person gave your account (`contacts_basis`).
+- Account webhooks (https://alion.io/developers/webhooks): `parseWebhook(rawBody, signature, secret)` checks the signature and returns the event typed by its name (`candidate.replied`, `candidate.consented`, `candidate.erased`, `role.became_hard`, `window.opened`; `WEBHOOK_EVENTS` lists the rest).
+- `verifyWebhook` also checks the timestamped `t=<ts>,v1=<hex>` signature of the account webhooks and refuses a replay older than `toleranceSec` (300); the `sha256=` signature of the agent webhooks works as before.
+- The people tools' types carry `person_id`, `contacts`, `contacts_shared` and `meta.mark`.
+
 ## 0.3.0 - 2026-11-23
 
 - A command line: `npx @alion-io/sdk company stripe.com`. Commands `resolve`, `company`, `companies`, `similar`, `jobs`, `market`, `money`, `owners`, `record`, `events`, `contracts`, `enrich`, `call`, `tools`; `--format table|json|csv`, `--all` to walk every page.

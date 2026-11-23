@@ -89,6 +89,18 @@ from alion import verify_webhook
 ok = verify_webhook(raw_body, request.headers.get("X-Alion-Signature"), os.environ["ALION_WEBHOOK_SECRET"])
 ```
 
+**For recruiting tools** (ATS, CRM): people rows as flat records keyed by the stable `person_id`, and the account webhooks of [alion.io/developers/webhooks](https://alion.io/developers/webhooks) (`candidate.replied`, `candidate.consented`, `candidate.erased`, `role.became_hard`, ...) checked and parsed in one call:
+
+```python
+from alion import to_candidate_record, parse_webhook
+
+rows = [to_candidate_record(p) for p in alion.match_people(role="Backend", technology="Python,Kubernetes", can_work_in="US")["items"]]
+
+event = parse_webhook(raw_body, request.headers.get("X-Alion-Signature"), os.environ["ALION_WEBHOOK_SECRET"])
+if event["event"] == "candidate.erased":
+    ats.remove(event["data"]["person"]["person_id"])
+```
+
 **A budget**: `Alion(max_credits=50)` refuses a call that could pass 50 credits ($5) in this process; `alion.credits_spent` says what was charged.
 
 **To pandas or CSV** (`pip install "alion[pandas]"` for pandas):

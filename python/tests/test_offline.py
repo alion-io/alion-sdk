@@ -232,6 +232,42 @@ def test_verify_webhook():
     assert not alion.verify_webhook(body, None, "s3cret")
 
 
+def test_verify_webhook_timestamped():
+    import hashlib
+    import hmac
+    body = '{"id":"evt_1","event":"candidate.replied","data":{}}'
+    t = 1795449600
+    sig = f"t={t},v1=" + hmac.new(b"whsec_x", f"{t}.{body}".encode(), hashlib.sha256).hexdigest()
+    assert alion.verify_webhook(body, sig, "whsec_x", now=t + 60)
+    assert alion.verify_webhook(body.encode(), sig, "whsec_x", now=t + 60)
+    assert not alion.verify_webhook(body + " ", sig, "whsec_x", now=t + 60)
+    assert not alion.verify_webhook(body, sig, "whsec_y", now=t + 60)
+    assert not alion.verify_webhook(body, sig, "whsec_x", now=t + 301)
+    assert alion.verify_webhook(body, sig, "whsec_x", now=t + 301, tolerance=600)
+
+
+def test_parse_webhook_and_candidate_record():
+    import hashlib
+    import hmac
+    import time as _time
+    body = '{"id":"evt_2","event":"candidate.erased","created":"2026-11-23T14:00:00Z","api_version":"2026-11-23","data":{"person":{"person_id":"p_3f9a1c2e7b6d4a80"},"reason":"account_deleted","action":"delete","note":""}}'
+    t = int(_time.time())
+    sig = f"t={t},v1=" + hmac.new(b"whsec_x", f"{t}.{body}".encode(), hashlib.sha256).hexdigest()
+    ev = alion.parse_webhook(body, sig, "whsec_x")
+    assert ev["event"] == "candidate.erased" and ev["data"]["person"]["person_id"] == "p_3f9a1c2e7b6d4a80"
+    try:
+        alion.parse_webhook(body, sig, "whsec_other")
+        raise AssertionError("a wrong secret must raise")
+    except alion.AlionError as e:
+        assert e.code == "invalid_signature"
+    card = {"person": "sam-p", "person_id": "p_0123456789abcdef", "skills": [{"name": "Python"}, {"name": "Go"}], "recent_jobs": [{"title": "Staff Engineer", "company": "Acme", "current": True}],
+            "location": {"country": "BR", "city": "Sao Paulo"}, "can_work_in": ["BR", "PT"], "work_modes": ["remote"]}
+    r = alion.to_candidate_record(card)
+    assert r["person_id"] == "p_0123456789abcdef" and r["skills"] == "Python; Go" and r["current_job"] == "Staff Engineer at Acme" and r["phone"] is None
+    p = alion.to_candidate_record({"person_id": "p_0123456789abcdef", "contacts": {"phone": "+15550100000"}, "contacts_shared": {"basis": "applied"}, "wants": {"work_modes": ["remote", "hybrid"]}})
+    assert p["phone"] == "+15550100000" and p["contacts_basis"] == "applied" and p["work_modes"] == "remote; hybrid"
+
+
 def test_to_csv_flattens():
     assert alion.to_csv({"items": [{"name": "A, B", "hq": {"country": "DE"}, "tags": ["x", "y"]}]}) == 'name,hq.country,tags\n"A, B",DE,x; y\n'
 

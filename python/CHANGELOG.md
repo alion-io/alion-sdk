@@ -1,5 +1,12 @@
 # Changelog: alion (PyPI)
 
+## 0.4.0 - 2026-11-23
+
+- For recruiting tools: `to_candidate_record(person)` turns a row of `search_people` / `match_people` / `similar_people` or a `get_person` profile into one flat record keyed by the new stable `person_id`, with the contacts the person gave your account (`contacts_basis`).
+- Account webhooks (https://alion.io/developers/webhooks): `parse_webhook(raw_body, signature, secret)` checks the signature and returns the event; `WEBHOOK_EVENTS` lists them.
+- `verify_webhook` also checks the timestamped `t=<ts>,v1=<hex>` signature of the account webhooks and refuses a replay older than `tolerance` (300 s); the `sha256=` signature of the agent webhooks works as before.
+- The people tools' types carry `person_id`, `contacts`, `contacts_shared` and `meta.mark`.
+
 ## 0.3.0 - 2026-11-23
 
 - A command line: `alion company stripe.com` (or `python -m alion`). Commands `resolve`, `company`, `companies`, `similar`, `jobs`, `market`, `money`, `owners`, `record`, `events`, `contracts`, `enrich`, `call`, `tools`; `--format table|json|csv`, `--all` to walk every page.

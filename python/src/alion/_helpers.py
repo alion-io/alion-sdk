@@ -7,21 +7,37 @@ import hashlib
 import hmac
 import io
 import json
+import time
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Union
 
 
-def verify_webhook(body: Union[str, bytes], signature: Optional[str], secret: str) -> bool:
-    """Checks the ``X-Alion-Signature: sha256=<hex>`` header of an agent webhook (``watch.events``, ``message.*``)
-    against the raw request body and your webhook secret (from set_webhook).
+def verify_webhook(body: Union[str, bytes], signature: Optional[str], secret: str, *, tolerance: int = 300, now: Optional[float] = None) -> bool:
+    """Checks the ``X-Alion-Signature`` header of a webhook against the raw request body and the secret:
+
+    - an account webhook (https://alion.io/developers/webhooks): ``t=<unix seconds>,v1=<hex>``, HMAC-SHA256 of
+      ``"<t>.<raw body>"`` with the address's secret (``whsec_...``); a timestamp more than ``tolerance`` seconds off fails;
+    - an agent webhook (set_webhook, a watch with deliver=webhook): ``sha256=<hex>``, HMAC-SHA256 of the body.
 
     >>> verify_webhook(request.body, request.headers.get("X-Alion-Signature"), os.environ["ALION_WEBHOOK_SECRET"])
     """
     if not signature or not secret:
         return False
-    want = signature.strip()
-    if want.lower().startswith("sha256="):
-        want = want[7:]
     raw = body.encode("utf-8") if isinstance(body, str) else body
+    header = signature.strip()
+    if header.startswith("t=") and "," in header:
+        parts: Dict[str, List[str]] = {}
+        for p in header.split(","):
+            k, _, v = p.strip().partition("=")
+            parts.setdefault(k, []).append(v.strip())
+        try:
+            ts = int(parts.get("t", ["0"])[0])
+        except ValueError:
+            return False
+        if not ts or abs((now if now is not None else time.time()) - ts) > tolerance:
+            return False
+        got = hmac.new(secret.encode("utf-8"), str(ts).encode("ascii") + b"." + raw, hashlib.sha256).hexdigest()
+        return any(hmac.compare_digest(got, v.lower()) for v in parts.get("v1", []))
+    want = header[7:] if header.lower().startswith("sha256=") else header
     got = hmac.new(secret.encode("utf-8"), raw, hashlib.sha256).hexdigest()
     return hmac.compare_digest(got, want.lower())
 

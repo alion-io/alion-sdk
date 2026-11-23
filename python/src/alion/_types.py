@@ -196,6 +196,8 @@ class SearchJobsResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -381,6 +383,8 @@ class GetJobResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -668,6 +672,8 @@ class ResolveCompanyResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -870,6 +876,8 @@ class SearchCompaniesResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -1030,6 +1038,8 @@ class SimilarCompaniesResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -1406,6 +1416,8 @@ class GetCompanyResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -1664,6 +1676,8 @@ class MarketStatsResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -1948,6 +1962,8 @@ class SearchInvestorsResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -2126,6 +2142,8 @@ class GetInvestorResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -2244,6 +2262,8 @@ class GetCompanyMoneyResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -2330,6 +2350,8 @@ class GetCompanyOwnershipResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -2416,6 +2438,8 @@ class GetCompanyRecordResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -2530,6 +2554,8 @@ class SearchCompanyEventsResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -2621,6 +2647,8 @@ class SearchContractsResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -2690,6 +2718,8 @@ class SearchPeopleArgs(TypedDict, total=False):
 class SearchPeopleResultItemsItem(TypedDict, total=False):
     person: Optional[str]
     """The handle: pass it to get_person, check_fit or send_message."""
+    person_id: Optional[str]
+    """The person's stable id (p_...): it never changes, unlike the handle; key your records by it - candidate.erased names it."""
     name: Optional[str]
     """When the person shows it."""
     headline: Optional[str]
@@ -2735,6 +2765,8 @@ class SearchPeopleResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -2810,6 +2842,8 @@ class MatchPeopleArgs(TypedDict, total=False):
 class MatchPeopleResultItemsItem(TypedDict, total=False):
     person: Optional[str]
     """The handle: pass it to get_person, check_fit or send_message."""
+    person_id: Optional[str]
+    """The person's stable id (p_...): it never changes, unlike the handle; key your records by it - candidate.erased names it."""
     name: Optional[str]
     """When the person shows it."""
     headline: Optional[str]
@@ -2855,6 +2889,8 @@ class MatchPeopleResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -2886,6 +2922,8 @@ class SimilarPeopleArgs(TypedDict, total=False):
 class SimilarPeopleResultItemsItem(TypedDict, total=False):
     person: Optional[str]
     """The handle: pass it to get_person, check_fit or send_message."""
+    person_id: Optional[str]
+    """The person's stable id (p_...): it never changes, unlike the handle; key your records by it - candidate.erased names it."""
     name: Optional[str]
     """When the person shows it."""
     headline: Optional[str]
@@ -2931,6 +2969,8 @@ class SimilarPeopleResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -2955,6 +2995,26 @@ class GetPersonArgs(TypedDict, total=False):
     """The person: their Alion handle (the \"person\" field of a search row), or an alion.io/user/<handle> or alion.io/@<handle> link."""
 
 
+class GetPersonResultContacts(TypedDict, total=False):
+    """Only the contacts the person gave this account (today: an application to its vacancy), as their privacy lets it see them; null otherwise. The email is never served."""
+
+    phone: Optional[str]
+    telegram: Optional[str]
+    linkedin: Optional[str]
+    x: Optional[str]
+    github: Optional[str]
+    huggingface: Optional[str]
+
+
+class GetPersonResultContactsShared(TypedDict, total=False):
+    """On what the contacts were given, and since when; null when none were."""
+
+    basis: Optional[str]
+    """applied"""
+    since: Optional[str]
+    """UTC ISO 8601"""
+
+
 class GetPersonResultMeta(TypedDict, total=False):
     """Quota and credit standing after this call."""
 
@@ -2975,12 +3035,20 @@ class GetPersonResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
 class GetPersonResult(TypedDict, total=False):
     person: Optional[str]
     """The handle."""
+    person_id: Optional[str]
+    """The stable id (p_...), the same in every answer and webhook."""
+    contacts: Optional[GetPersonResultContacts]
+    """Only the contacts the person gave this account (today: an application to its vacancy), as their privacy lets it see them; null otherwise. The email is never served."""
+    contacts_shared: Optional[GetPersonResultContactsShared]
+    """On what the contacts were given, and since when; null when none were."""
     name: Optional[str]
     photo: Optional[str]
     headline: Optional[str]
@@ -3073,6 +3141,8 @@ class CheckFitResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3165,6 +3235,8 @@ class SendMessageResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3223,6 +3295,8 @@ class GetConversationResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3277,6 +3351,8 @@ class ListConversationsResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3311,6 +3387,8 @@ class AgentStatusResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3357,6 +3435,8 @@ class VerifyCompanyResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3398,6 +3478,8 @@ class SetWebhookResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3443,6 +3525,8 @@ class WatchSearchResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3484,6 +3568,8 @@ class CheckWatchResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3522,6 +3608,8 @@ class ListWatchesResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3557,6 +3645,8 @@ class DeleteWatchResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3593,6 +3683,8 @@ class MyMatchesResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3633,6 +3725,8 @@ class DraftProfileChangeResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3670,6 +3764,8 @@ class CheckCounterpartyResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 
@@ -3740,6 +3836,8 @@ class GetAgentResultMeta(TypedDict, total=False):
     """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
     free_reads_left_today: Optional[int]
     """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
     docs: Optional[str]
 
 

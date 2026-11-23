@@ -198,6 +198,52 @@ test('verifyWebhook checks the sha256 HMAC', async () => {
     assert.equal(await verifyWebhook(body, null, 's3cret'), false);
 });
 
+test('verifyWebhook checks the timestamped signature of an account webhook', async () => {
+    const { verifyWebhook } = await import('../dist/esm/index.js');
+    const { createHmac } = await import('node:crypto');
+    const body = '{"id":"evt_1","event":"candidate.replied","data":{}}';
+    const t = 1795449600;
+    const sig = `t=${t},v1=` + createHmac('sha256', 'whsec_x').update(`${t}.${body}`).digest('hex');
+    assert.equal(await verifyWebhook(body, sig, 'whsec_x', { now: t + 60 }), true);
+    assert.equal(await verifyWebhook(new TextEncoder().encode(body), sig, 'whsec_x', { now: t + 60 }), true);
+    assert.equal(await verifyWebhook(body + ' ', sig, 'whsec_x', { now: t + 60 }), false);
+    assert.equal(await verifyWebhook(body, sig, 'whsec_y', { now: t + 60 }), false);
+    assert.equal(await verifyWebhook(body, sig, 'whsec_x', { now: t + 301 }), false, 'a replay older than five minutes');
+    assert.equal(await verifyWebhook(body, sig, 'whsec_x', { now: t + 301, toleranceSec: 600 }), true);
+});
+
+test('parseWebhook returns the typed event or throws', async () => {
+    const { parseWebhook, AlionError: E } = await import('../dist/esm/index.js');
+    const { createHmac } = await import('node:crypto');
+    const body = JSON.stringify({ id: 'evt_2', event: 'candidate.erased', created: '2026-11-23T14:00:00Z', api_version: '2026-11-23',
+        data: { person: { person_id: 'p_3f9a1c2e7b6d4a80' }, reason: 'account_deleted', action: 'delete', note: '' } });
+    const t = Math.floor(Date.now() / 1000);
+    const sig = `t=${t},v1=` + createHmac('sha256', 'whsec_x').update(`${t}.${body}`).digest('hex');
+    const ev = await parseWebhook(body, sig, 'whsec_x');
+    assert.equal(ev.event, 'candidate.erased');
+    assert.equal(ev.data.person.person_id, 'p_3f9a1c2e7b6d4a80');
+    await assert.rejects(parseWebhook(body, sig, 'whsec_other'), (e) => e instanceof E && e.code === 'invalid_signature');
+});
+
+test('toCandidateRecord flattens a person for an ATS', async () => {
+    const { toCandidateRecord } = await import('../dist/esm/index.js');
+    const card = { person: 'sam-p', person_id: 'p_0123456789abcdef', name: 'Sam P.', headline: 'Backend · senior', seniority: 'senior', years_experience: 9,
+        skills: [{ name: 'Python', years: 7 }, { name: 'Go', years: 3 }], recent_jobs: [{ title: 'Staff Engineer', company: 'Acme', current: true }],
+        location: { country: 'BR', city: 'Sao Paulo' }, can_work_in: ['BR', 'PT'], work_modes: ['remote'], availability: 'actively_looking', url: 'https://alion.io/user/sam-p' };
+    const r = toCandidateRecord(card);
+    assert.equal(r.person_id, 'p_0123456789abcdef');
+    assert.equal(r.handle, 'sam-p');
+    assert.equal(r.skills, 'Python; Go');
+    assert.equal(r.current_job, 'Staff Engineer at Acme');
+    assert.equal(r.can_work_in, 'BR; PT');
+    assert.equal(r.phone, null);
+    const profile = toCandidateRecord({ person: 'sam-p', person_id: 'p_0123456789abcdef', experience: [{ title: 'Staff Engineer', company: 'Acme', current: true }],
+        contacts: { phone: '+15550100000', github: 'https://github.com/sam' }, contacts_shared: { basis: 'applied', since: '2026-11-23T10:00:00Z' }, wants: { availability: 'open_to_offers', work_modes: ['remote', 'hybrid'] } });
+    assert.equal(profile.phone, '+15550100000');
+    assert.equal(profile.contacts_basis, 'applied');
+    assert.equal(profile.work_modes, 'remote; hybrid');
+});
+
 test('toCSV flattens nested fields', async () => {
     const { toCSV } = await import('../dist/esm/index.js');
     const csv = toCSV([{ name: 'A, B', hq: { country: 'DE' }, tags: ['x', 'y'] }]);

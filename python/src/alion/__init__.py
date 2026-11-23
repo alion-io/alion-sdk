@@ -12,12 +12,16 @@ from ._errors import AlionError
 from ._helpers import flatten, to_csv, to_pandas, verify_webhook
 from ._types import PAGED_TOOLS, READ_ONLY_TOOLS, TOOL_NAMES
 from ._version import __version__
+from .people import WEBHOOK_EVENTS, parse_webhook, to_candidate_record
 
 __all__ = [
     "Alion",
     "AsyncAlion",
     "AlionError",
     "verify_webhook",
+    "parse_webhook",
+    "to_candidate_record",
+    "WEBHOOK_EVENTS",
     "to_csv",
     "to_pandas",
     "flatten",
