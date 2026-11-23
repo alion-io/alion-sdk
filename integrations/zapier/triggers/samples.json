@@ -1,0 +1,171 @@
+{
+    "candidate.replied": {
+        "person": {
+            "person_id": "p_3f9a1c2e7b6d4a80",
+            "person": "sample-backend-engineer",
+            "name": "Sam P.",
+            "url": "https://alion.io/user/sample-backend-engineer"
+        },
+        "conversation": {
+            "id": 1000001,
+            "url": "https://alion.io/messages?p=sample-backend-engineer"
+        },
+        "message": {
+            "id": 5000001,
+            "text": "Thanks for reaching out. Yes, I am open to it - Tuesday or Wednesday works for a call.",
+            "at": "2026-11-23T20:44:19Z"
+        }
+    },
+    "candidate.consented": {
+        "person": {
+            "person_id": "p_3f9a1c2e7b6d4a80",
+            "person": "sample-backend-engineer",
+            "name": "Sam P.",
+            "url": "https://alion.io/user/sample-backend-engineer"
+        },
+        "basis": "applied",
+        "contacts": {
+            "phone": "+15550100000",
+            "linkedin": "https://www.linkedin.com/in/sample",
+            "github": "https://github.com/sample"
+        },
+        "job": {
+            "id": 1234567,
+            "title": "Senior Backend Engineer",
+            "url": "https://alion.io/job/senior-backend-engineer-sample"
+        }
+    },
+    "candidate.consent_revoked": {
+        "person": {
+            "person_id": "p_3f9a1c2e7b6d4a80",
+            "person": "sample-backend-engineer"
+        },
+        "basis": "shared",
+        "action": "remove_contacts",
+        "note": "The person stopped sharing their contacts with your account: remove the phone and messengers you got from them. The profile itself may stay."
+    },
+    "candidate.erased": {
+        "person": {
+            "person_id": "p_3f9a1c2e7b6d4a80",
+            "person": "sample-backend-engineer"
+        },
+        "reason": "account_deleted",
+        "action": "delete",
+        "note": "Delete this person and their data from your systems. Alion will not hand them to your account again."
+    },
+    "shortlist.candidate_added": {
+        "order": {
+            "id": 1234567,
+            "title": "Senior Backend Engineer",
+            "status": "live",
+            "url": "https://alion.io/job/senior-backend-engineer-sample",
+            "shortlist_url": "https://alion.io/job/1234567/applies",
+            "people": 7,
+            "stages": {
+                "new": 3,
+                "screening": 2,
+                "interview": 1,
+                "offer": 1,
+                "hired": 0,
+                "rejected": 0
+            },
+            "sources": {
+                "applied": 4,
+                "sourced": 3
+            }
+        },
+        "person": {
+            "person_id": "p_3f9a1c2e7b6d4a80",
+            "person": "sample-backend-engineer",
+            "name": "Sam P.",
+            "url": "https://alion.io/user/sample-backend-engineer"
+        },
+        "source": "sourced",
+        "stage": "new",
+        "match_percent": 84,
+        "contacts": null,
+        "contacts_basis": null
+    },
+    "order.new_matches": {
+        "order": {
+            "id": 1234567,
+            "title": "Senior Backend Engineer",
+            "status": "live",
+            "url": "https://alion.io/job/senior-backend-engineer-sample",
+            "shortlist_url": "https://alion.io/job/1234567/applies",
+            "people": 7,
+            "stages": {
+                "new": 3,
+                "screening": 2,
+                "interview": 1,
+                "offer": 1,
+                "hired": 0,
+                "rejected": 0
+            },
+            "sources": {
+                "applied": 4,
+                "sourced": 3
+            }
+        },
+        "people": [
+            {
+                "person_id": "p_3f9a1c2e7b6d4a80",
+                "person": "sample-backend-engineer",
+                "name": "Sam P.",
+                "url": "https://alion.io/user/sample-backend-engineer",
+                "headline": "Backend · senior",
+                "location": {
+                    "country": "DE",
+                    "city": null
+                },
+                "availability": "open_to_offers",
+                "why": [
+                    "Has Go 6 years, PostgreSQL 5 years",
+                    "Main role: Backend"
+                ]
+            }
+        ],
+        "count": 1
+    },
+    "role.became_hard": {
+        "selection": {
+            "id": 42,
+            "title": "Backend, United States, hard to fill",
+            "url": "https://alion.io/recruiting?fam=Backend&rc=US&hard=1"
+        },
+        "roles": [
+            {
+                "job_id": 1234567,
+                "title": "Senior Backend Engineer",
+                "url": "https://alion.io/job/senior-backend-engineer-sample",
+                "company": {
+                    "name": "Sample Robotics",
+                    "domain": "sample-robotics.com",
+                    "url": "https://alion.io/company/sample-robotics"
+                },
+                "days_open": 97,
+                "reposted": true,
+                "pay_usd_year": 185000,
+                "pay_estimated": false
+            }
+        ],
+        "count": 1
+    },
+    "window.opened": {
+        "company": {
+            "name": "Sample Robotics",
+            "domain": "sample-robotics.com",
+            "url": "https://alion.io/company/sample-robotics"
+        },
+        "windows": [
+            {
+                "title": "Hiring its first sales team in Germany",
+                "since": "2026-11-23",
+                "until": null,
+                "sources": 3,
+                "purchases": 2,
+                "url": "https://alion.io/company/sample-robotics/buying-windows"
+            }
+        ]
+    }
+}

@@ -24,6 +24,35 @@ function header(raw, name) {
   return '';
 }
 
+// each event's data as Alion's own sample has it (the shapes of WebhookEvents::sample, taken from alion.io): the sample of the Zap
+// editor and the output fields Zapier compares a live event with
+const SAMPLES = require('./samples.json');
+
+function sampleOf(event) {
+  return flatten({ id: `evt_sample_${event.replace(/\./g, '_')}`, event, created: '2026-11-23T12:00:00Z', test: true, data: SAMPLES[event] || {} });
+}
+
+// the fields of a sample, as Zapier names them (nested keys joined by "__", the rows of a list as "list[]key")
+function fieldsOf(obj, prefix = '', out = []) {
+  for (const [k, v] of Object.entries(obj)) {
+    const key = `${prefix}${k}`;
+    if (Array.isArray(v)) {
+      if (v.length && v[0] && typeof v[0] === 'object') for (const [ik, iv] of Object.entries(v[0])) { if (iv === null || typeof iv !== 'object') out.push({ key: `${key}[]${ik}`, label: `${label(k)} ${label(ik)}`, ...typeOf(iv) }); }
+      else out.push({ key: `${key}[]`, label: label(k) });
+    } else if (v && typeof v === 'object') fieldsOf(v, `${key}__`, out);
+    else out.push({ key, label: label(key.replace(/__/g, ' ')), ...typeOf(v) });
+  }
+  return out;
+}
+
+function typeOf(v) {
+  return Number.isInteger(v) ? { type: 'integer' } : typeof v === 'number' ? { type: 'number' } : typeof v === 'boolean' ? { type: 'boolean' } : {};
+}
+
+function label(k) {
+  return String(k).replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()).replace(/\bId\b/g, 'ID').replace(/\bUrl\b/g, 'URL').replace(/\bUsd\b/g, 'USD');
+}
+
 function hookTrigger([event, label, description, noun]) {
   return {
     key: event.replace(/\./g, '_'),
@@ -43,7 +72,8 @@ function hookTrigger([event, label, description, noun]) {
         return [flatten(bundle.cleanedRequest)];
       },
       performList: async (z) => ((await call(z, 'webhook.samples', { event })).items || []).map(flatten),
-      sample: { id: `evt_sample_${event.replace(/\./g, '_')}`, event, created: '2026-11-23T12:00:00Z', test: true },
+      sample: sampleOf(event),
+      outputFields: fieldsOf(sampleOf(event)),
     },
   };
 }
