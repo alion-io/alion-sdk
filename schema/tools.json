@@ -12250,6 +12250,679 @@
       }
     },
     {
+      "name": "list_orders",
+      "title": "List your job orders",
+      "description": "Your job orders: the vacancies your account posted on Alion, newest first, each with its status (live, paused, draft, closed), its links and how many people sit at each stage of its shortlist (new, screening, interview, offer, hired, rejected) and where they came from (applied, sourced). Pass order_id for one. Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "integer",
+            "description": "The order: the id list_orders gives (an Alion vacancy your account posted)."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "live",
+              "paused",
+              "draft",
+              "closed",
+              "rejected",
+              "all"
+            ],
+            "default": "all"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "type": "string",
+            "description": "next_cursor of the previous page."
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {},
+            "description": "The orders."
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "stages": {
+            "description": ""
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "tier": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "anonymous, free, pro, partner or staff"
+              },
+              "units_charged": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "used_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "day_limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "remaining_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "minute_limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "resets_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "UTC ISO 8601"
+              },
+              "credits_charged": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "Credits this call cost (1 credit = $0.10)."
+              },
+              "credits_left": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "The account balance after this call, in credits."
+              },
+              "billing": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"
+              },
+              "free_reads_left_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
+              "docs": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "description": "Quota and credit standing after this call."
+          }
+        }
+      },
+      "annotations": {
+        "title": "List your job orders",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_shortlist",
+      "title": "Read the shortlist of an order",
+      "description": "The people of one job order, newest first: person_id, handle, name, headline, stage, source (applied: they applied; sourced: you added them), the fit Alion computed, the application they sent (note, asked pay), and their contacts only where they gave them to you (they applied, or shared them in Messages; never the email). Filter by stage or source. Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "integer",
+            "description": "The order: the id list_orders gives (an Alion vacancy your account posted)."
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "new",
+              "screening",
+              "interview",
+              "offer",
+              "hired",
+              "rejected"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "applied",
+              "sourced"
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "type": "string",
+            "description": "next_cursor of the previous page."
+          }
+        },
+        "required": [
+          "order_id"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "order": {
+            "description": "The order."
+          },
+          "items": {
+            "type": "array",
+            "items": {},
+            "description": "The people."
+          },
+          "hidden": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "People no longer open to your account."
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "tier": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "anonymous, free, pro, partner or staff"
+              },
+              "units_charged": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "used_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "day_limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "remaining_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "minute_limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "resets_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "UTC ISO 8601"
+              },
+              "credits_charged": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "Credits this call cost (1 credit = $0.10)."
+              },
+              "credits_left": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "The account balance after this call, in credits."
+              },
+              "billing": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"
+              },
+              "free_reads_left_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
+              "docs": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "description": "Quota and credit standing after this call."
+          }
+        }
+      },
+      "annotations": {
+        "title": "Read the shortlist of an order",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "add_to_shortlist",
+      "title": "Add a person to an order",
+      "description": "Add a person you found (search_people, match_people) to the shortlist of one of your job orders, at the stage new. The person is told they are on a shortlist; the same rules as get_person apply (people open to agents, the different people of 30 days). Adding someone already there changes nothing. Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "integer",
+            "description": "The order: the id list_orders gives (an Alion vacancy your account posted)."
+          },
+          "person": {
+            "type": "string",
+            "description": "The person: person_id (p_...), their Alion handle or an alion.io/user/<handle> link."
+          }
+        },
+        "required": [
+          "order_id",
+          "person"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "person_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "person": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "added": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "stage": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "match_percent": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "tier": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "anonymous, free, pro, partner or staff"
+              },
+              "units_charged": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "used_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "day_limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "remaining_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "minute_limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "resets_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "UTC ISO 8601"
+              },
+              "credits_charged": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "Credits this call cost (1 credit = $0.10)."
+              },
+              "credits_left": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "The account balance after this call, in credits."
+              },
+              "billing": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"
+              },
+              "free_reads_left_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
+              "docs": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "description": "Quota and credit standing after this call."
+          }
+        }
+      },
+      "annotations": {
+        "title": "Add a person to an order",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "move_on_shortlist",
+      "title": "Move a person on a shortlist",
+      "description": "Move a person of an order's shortlist to another stage (a person who applied hears of it, as on the site), or remove one you added (remove: true; an application is the person's own - move it to rejected instead). Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "integer",
+            "description": "The order: the id list_orders gives (an Alion vacancy your account posted)."
+          },
+          "person": {
+            "type": "string",
+            "description": "The person: person_id (p_...), their Alion handle or an alion.io/user/<handle> link."
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "new",
+              "screening",
+              "interview",
+              "offer",
+              "hired",
+              "rejected"
+            ]
+          },
+          "remove": {
+            "type": "boolean",
+            "description": "Remove a person you added instead of moving them."
+          }
+        },
+        "required": [
+          "order_id",
+          "person"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "person_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "stage": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "was": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "removed": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "tier": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "anonymous, free, pro, partner or staff"
+              },
+              "units_charged": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "used_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "day_limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "remaining_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "minute_limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "resets_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "UTC ISO 8601"
+              },
+              "credits_charged": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "Credits this call cost (1 credit = $0.10)."
+              },
+              "credits_left": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "The account balance after this call, in credits."
+              },
+              "billing": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"
+              },
+              "free_reads_left_today": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"
+              },
+              "mark": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "People tools: the code of this account and UTC day; every list of people read today carries it"
+              },
+              "docs": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "description": "Quota and credit standing after this call."
+          }
+        }
+      },
+      "annotations": {
+        "title": "Move a person on a shortlist",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
       "name": "watch_search",
       "title": "Watch a search for new results",
       "description": "Save a search of jobs, companies or people, or a feed of company events, and come back for what is new: kind is jobs, companies, people or events, filters are the arguments of search_jobs, search_companies, search_people or search_company_events (e.g. {\"role\":\"Backend\",\"country\":\"DE\",\"work_mode\":\"remote\"}). Answers the first page now (newest first, compact) and a watch_id; check_watch with it later returns only the rows that appeared since. Up to 20 watches per agent (an account, a wallet, or a network and client name). Use it for a job hunt, a hiring pipeline or a market you follow. Free. Docs: https://alion.io/developers/docs",

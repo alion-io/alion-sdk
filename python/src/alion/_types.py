@@ -3504,6 +3504,187 @@ class SetWebhookResult(TypedDict, total=False):
     """Quota and credit standing after this call."""
 
 
+class ListOrdersArgs(TypedDict, total=False):
+    order_id: int
+    """The order: the id list_orders gives (an Alion vacancy your account posted)."""
+    status: Literal["live", "paused", "draft", "closed", "rejected", "all"]
+    limit: int
+    cursor: str
+    """next_cursor of the previous page."""
+
+
+class ListOrdersResultMeta(TypedDict, total=False):
+    """Quota and credit standing after this call."""
+
+    tier: Optional[str]
+    """anonymous, free, pro, partner or staff"""
+    units_charged: Optional[int]
+    used_today: Optional[int]
+    day_limit: Optional[int]
+    remaining_today: Optional[int]
+    minute_limit: Optional[int]
+    resets_at: Optional[str]
+    """UTC ISO 8601"""
+    credits_charged: Optional[float]
+    """Credits this call cost (1 credit = $0.10)."""
+    credits_left: Optional[float]
+    """The account balance after this call, in credits."""
+    billing: Optional[str]
+    """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
+    free_reads_left_today: Optional[int]
+    """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
+    docs: Optional[str]
+
+
+class ListOrdersResult(TypedDict, total=False):
+    items: List[Any]
+    """The orders."""
+    next_cursor: Optional[str]
+    id: Optional[int]
+    title: Optional[str]
+    stages: Any
+    meta: ListOrdersResultMeta
+    """Quota and credit standing after this call."""
+
+
+class GetShortlistArgs(TypedDict, total=False):
+    order_id: Required[int]
+    """The order: the id list_orders gives (an Alion vacancy your account posted)."""
+    stage: Literal["new", "screening", "interview", "offer", "hired", "rejected"]
+    source: Literal["applied", "sourced"]
+    limit: int
+    cursor: str
+    """next_cursor of the previous page."""
+
+
+class GetShortlistResultMeta(TypedDict, total=False):
+    """Quota and credit standing after this call."""
+
+    tier: Optional[str]
+    """anonymous, free, pro, partner or staff"""
+    units_charged: Optional[int]
+    used_today: Optional[int]
+    day_limit: Optional[int]
+    remaining_today: Optional[int]
+    minute_limit: Optional[int]
+    resets_at: Optional[str]
+    """UTC ISO 8601"""
+    credits_charged: Optional[float]
+    """Credits this call cost (1 credit = $0.10)."""
+    credits_left: Optional[float]
+    """The account balance after this call, in credits."""
+    billing: Optional[str]
+    """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
+    free_reads_left_today: Optional[int]
+    """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
+    docs: Optional[str]
+
+
+class GetShortlistResult(TypedDict, total=False):
+    order: Any
+    """The order."""
+    items: List[Any]
+    """The people."""
+    hidden: Optional[int]
+    """People no longer open to your account."""
+    next_cursor: Optional[str]
+    note: Optional[str]
+    meta: GetShortlistResultMeta
+    """Quota and credit standing after this call."""
+
+
+class AddToShortlistArgs(TypedDict, total=False):
+    order_id: Required[int]
+    """The order: the id list_orders gives (an Alion vacancy your account posted)."""
+    person: Required[str]
+    """The person: person_id (p_...), their Alion handle or an alion.io/user/<handle> link."""
+
+
+class AddToShortlistResultMeta(TypedDict, total=False):
+    """Quota and credit standing after this call."""
+
+    tier: Optional[str]
+    """anonymous, free, pro, partner or staff"""
+    units_charged: Optional[int]
+    used_today: Optional[int]
+    day_limit: Optional[int]
+    remaining_today: Optional[int]
+    minute_limit: Optional[int]
+    resets_at: Optional[str]
+    """UTC ISO 8601"""
+    credits_charged: Optional[float]
+    """Credits this call cost (1 credit = $0.10)."""
+    credits_left: Optional[float]
+    """The account balance after this call, in credits."""
+    billing: Optional[str]
+    """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
+    free_reads_left_today: Optional[int]
+    """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
+    docs: Optional[str]
+
+
+class AddToShortlistResult(TypedDict, total=False):
+    order_id: Optional[int]
+    person_id: Optional[str]
+    person: Optional[str]
+    added: Optional[bool]
+    stage: Optional[str]
+    match_percent: Optional[int]
+    meta: AddToShortlistResultMeta
+    """Quota and credit standing after this call."""
+
+
+class MoveOnShortlistArgs(TypedDict, total=False):
+    order_id: Required[int]
+    """The order: the id list_orders gives (an Alion vacancy your account posted)."""
+    person: Required[str]
+    """The person: person_id (p_...), their Alion handle or an alion.io/user/<handle> link."""
+    stage: Literal["new", "screening", "interview", "offer", "hired", "rejected"]
+    remove: bool
+    """Remove a person you added instead of moving them."""
+
+
+class MoveOnShortlistResultMeta(TypedDict, total=False):
+    """Quota and credit standing after this call."""
+
+    tier: Optional[str]
+    """anonymous, free, pro, partner or staff"""
+    units_charged: Optional[int]
+    used_today: Optional[int]
+    day_limit: Optional[int]
+    remaining_today: Optional[int]
+    minute_limit: Optional[int]
+    resets_at: Optional[str]
+    """UTC ISO 8601"""
+    credits_charged: Optional[float]
+    """Credits this call cost (1 credit = $0.10)."""
+    credits_left: Optional[float]
+    """The account balance after this call, in credits."""
+    billing: Optional[str]
+    """live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff, partner or free"""
+    free_reads_left_today: Optional[int]
+    """Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT)"""
+    mark: Optional[str]
+    """People tools: the code of this account and UTC day; every list of people read today carries it"""
+    docs: Optional[str]
+
+
+class MoveOnShortlistResult(TypedDict, total=False):
+    order_id: Optional[int]
+    person_id: Optional[str]
+    stage: Optional[str]
+    was: Optional[str]
+    removed: Optional[bool]
+    meta: MoveOnShortlistResultMeta
+    """Quota and credit standing after this call."""
+
+
 class WatchSearchArgs(TypedDict, total=False):
     kind: Required[Literal["jobs", "companies", "people", "events"]]
     """What to watch: jobs, companies, people, or events (the company event feed of search_company_events: funding rounds, new offices, leadership hires, Buying windows... of the companies or the slice you name; paid per event, $0.005, with an account)."""
@@ -3935,8 +4116,8 @@ class CheckEmployerArgs(TypedDict, total=False):
 CheckEmployerResult = Dict[str, Any]
 
 
-TOOL_NAMES = ("search_jobs", "get_job", "resolve_company", "search_companies", "similar_companies", "get_company", "market_stats", "get_index", "search_investors", "get_investor", "get_company_money", "get_company_ownership", "get_company_record", "search_company_events", "search_contracts", "search_people", "match_people", "similar_people", "get_person", "check_fit", "send_message", "get_conversation", "list_conversations", "agent_status", "verify_company", "set_webhook", "watch_search", "check_watch", "list_watches", "delete_watch", "my_matches", "draft_profile_change", "check_counterparty", "register_agent", "get_agent", "contact_company", "company_inbox_settings", "report_problem", "check_employer",)
+TOOL_NAMES = ("search_jobs", "get_job", "resolve_company", "search_companies", "similar_companies", "get_company", "market_stats", "get_index", "search_investors", "get_investor", "get_company_money", "get_company_ownership", "get_company_record", "search_company_events", "search_contracts", "search_people", "match_people", "similar_people", "get_person", "check_fit", "send_message", "get_conversation", "list_conversations", "agent_status", "verify_company", "set_webhook", "list_orders", "get_shortlist", "add_to_shortlist", "move_on_shortlist", "watch_search", "check_watch", "list_watches", "delete_watch", "my_matches", "draft_profile_change", "check_counterparty", "register_agent", "get_agent", "contact_company", "company_inbox_settings", "report_problem", "check_employer",)
 
-PAGED_TOOLS = frozenset(["search_jobs", "search_companies", "search_investors", "search_company_events", "search_contracts", "search_people", "match_people"])
+PAGED_TOOLS = frozenset(["search_jobs", "search_companies", "search_investors", "search_company_events", "search_contracts", "search_people", "match_people", "list_orders", "get_shortlist"])
 
-READ_ONLY_TOOLS = frozenset(["search_jobs", "get_job", "resolve_company", "search_companies", "similar_companies", "get_company", "market_stats", "get_index", "search_investors", "get_investor", "get_company_money", "get_company_ownership", "get_company_record", "search_company_events", "search_contracts", "search_people", "match_people", "similar_people", "get_person", "check_fit", "get_conversation", "list_conversations", "agent_status", "list_watches", "my_matches", "check_counterparty", "get_agent"])
+READ_ONLY_TOOLS = frozenset(["search_jobs", "get_job", "resolve_company", "search_companies", "similar_companies", "get_company", "market_stats", "get_index", "search_investors", "get_investor", "get_company_money", "get_company_ownership", "get_company_record", "search_company_events", "search_contracts", "search_people", "match_people", "similar_people", "get_person", "check_fit", "get_conversation", "list_conversations", "agent_status", "list_orders", "get_shortlist", "list_watches", "my_matches", "check_counterparty", "get_agent"])

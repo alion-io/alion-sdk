@@ -126,6 +126,22 @@ class SyncTools:
         """A public https url that receives your agent's events as signed POSTs: message.delivered, message.replied (with the text), message.declined, message.returned, message.expired, agent.paused, agent.blocked. The answer gives the secret for the X-Alion-Signature HMAC once. Pass an empty url to remove it. Docs: https://alion.io/developers/docs"""
         return self.call("set_webhook", dict(args), timeout=timeout)  # type: ignore[no-any-return]
 
+    def list_orders(self, *, timeout: Optional[float] = None, **args: Unpack[t.ListOrdersArgs]) -> t.ListOrdersResult:
+        """Your job orders: the vacancies your account posted on Alion, newest first, each with its status (live, paused, draft, closed), its links and how many people sit at each stage of its shortlist (new, screening, interview, offer, hired, rejected) and where they came from (applied, sourced). Pass order_id for one. Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs"""
+        return self.call("list_orders", dict(args), timeout=timeout)  # type: ignore[no-any-return]
+
+    def get_shortlist(self, *, timeout: Optional[float] = None, **args: Unpack[t.GetShortlistArgs]) -> t.GetShortlistResult:
+        """The people of one job order, newest first: person_id, handle, name, headline, stage, source (applied: they applied; sourced: you added them), the fit Alion computed, the application they sent (note, asked pay), and their contacts only where they gave them to you (they applied, or shared them in Messages; never the email). Filter by stage or source. Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs"""
+        return self.call("get_shortlist", dict(args), timeout=timeout)  # type: ignore[no-any-return]
+
+    def add_to_shortlist(self, *, timeout: Optional[float] = None, **args: Unpack[t.AddToShortlistArgs]) -> t.AddToShortlistResult:
+        """Add a person you found (search_people, match_people) to the shortlist of one of your job orders, at the stage new. The person is told they are on a shortlist; the same rules as get_person apply (people open to agents, the different people of 30 days). Adding someone already there changes nothing. Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs"""
+        return self.call("add_to_shortlist", dict(args), timeout=timeout)  # type: ignore[no-any-return]
+
+    def move_on_shortlist(self, *, timeout: Optional[float] = None, **args: Unpack[t.MoveOnShortlistArgs]) -> t.MoveOnShortlistResult:
+        """Move a person of an order's shortlist to another stage (a person who applied hears of it, as on the site), or remove one you added (remove: true; an application is the person's own - move it to rejected instead). Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs"""
+        return self.call("move_on_shortlist", dict(args), timeout=timeout)  # type: ignore[no-any-return]
+
     def watch_search(self, *, timeout: Optional[float] = None, **args: Unpack[t.WatchSearchArgs]) -> t.WatchSearchResult:
         """Save a search of jobs, companies or people, or a feed of company events, and come back for what is new: kind is jobs, companies, people or events, filters are the arguments of search_jobs, search_companies, search_people or search_company_events (e.g. {\"role\":\"Backend\",\"country\":\"DE\",\"work_mode\":\"remote\"}). Answers the first page now (newest first, compact) and a watch_id; check_watch with it later returns only the rows that appeared since. Up to 20 watches per agent (an account, a wallet, or a network and client name). Use it for a job hunt, a hiring pipeline or a market you follow. Free. Docs: https://alion.io/developers/docs"""
         return self.call("watch_search", dict(args), timeout=timeout)  # type: ignore[no-any-return]
@@ -288,6 +304,22 @@ class AsyncTools:
     async def set_webhook(self, *, timeout: Optional[float] = None, **args: Unpack[t.SetWebhookArgs]) -> t.SetWebhookResult:
         """A public https url that receives your agent's events as signed POSTs: message.delivered, message.replied (with the text), message.declined, message.returned, message.expired, agent.paused, agent.blocked. The answer gives the secret for the X-Alion-Signature HMAC once. Pass an empty url to remove it. Docs: https://alion.io/developers/docs"""
         return await self.call("set_webhook", dict(args), timeout=timeout)  # type: ignore[no-any-return]
+
+    async def list_orders(self, *, timeout: Optional[float] = None, **args: Unpack[t.ListOrdersArgs]) -> t.ListOrdersResult:
+        """Your job orders: the vacancies your account posted on Alion, newest first, each with its status (live, paused, draft, closed), its links and how many people sit at each stage of its shortlist (new, screening, interview, offer, hired, rejected) and where they came from (applied, sourced). Pass order_id for one. Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs"""
+        return await self.call("list_orders", dict(args), timeout=timeout)  # type: ignore[no-any-return]
+
+    async def get_shortlist(self, *, timeout: Optional[float] = None, **args: Unpack[t.GetShortlistArgs]) -> t.GetShortlistResult:
+        """The people of one job order, newest first: person_id, handle, name, headline, stage, source (applied: they applied; sourced: you added them), the fit Alion computed, the application they sent (note, asked pay), and their contacts only where they gave them to you (they applied, or shared them in Messages; never the email). Filter by stage or source. Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs"""
+        return await self.call("get_shortlist", dict(args), timeout=timeout)  # type: ignore[no-any-return]
+
+    async def add_to_shortlist(self, *, timeout: Optional[float] = None, **args: Unpack[t.AddToShortlistArgs]) -> t.AddToShortlistResult:
+        """Add a person you found (search_people, match_people) to the shortlist of one of your job orders, at the stage new. The person is told they are on a shortlist; the same rules as get_person apply (people open to agents, the different people of 30 days). Adding someone already there changes nothing. Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs"""
+        return await self.call("add_to_shortlist", dict(args), timeout=timeout)  # type: ignore[no-any-return]
+
+    async def move_on_shortlist(self, *, timeout: Optional[float] = None, **args: Unpack[t.MoveOnShortlistArgs]) -> t.MoveOnShortlistResult:
+        """Move a person of an order's shortlist to another stage (a person who applied hears of it, as on the site), or remove one you added (remove: true; an application is the person's own - move it to rejected instead). Needs the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs"""
+        return await self.call("move_on_shortlist", dict(args), timeout=timeout)  # type: ignore[no-any-return]
 
     async def watch_search(self, *, timeout: Optional[float] = None, **args: Unpack[t.WatchSearchArgs]) -> t.WatchSearchResult:
         """Save a search of jobs, companies or people, or a feed of company events, and come back for what is new: kind is jobs, companies, people or events, filters are the arguments of search_jobs, search_companies, search_people or search_company_events (e.g. {\"role\":\"Backend\",\"country\":\"DE\",\"work_mode\":\"remote\"}). Answers the first page now (newest first, compact) and a watch_id; check_watch with it later returns only the rows that appeared since. Up to 20 watches per agent (an account, a wallet, or a network and client name). Use it for a job hunt, a hiring pipeline or a market you follow. Free. Docs: https://alion.io/developers/docs"""

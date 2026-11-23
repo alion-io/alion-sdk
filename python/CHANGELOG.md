@@ -1,5 +1,10 @@
 # Changelog: alion (PyPI)
 
+## 0.4.2 - 2026-11-23
+
+- Job orders (the vacancies your account posted on Alion) and their shortlists: `list_orders`, `get_shortlist`, `add_to_shortlist`, `move_on_shortlist` (regenerated from alion.io/mcp/tools). The same over REST with your key: `/api/order.list`, `/api/order.get`, `/api/shortlist.get`, `/api/shortlist.add`, `/api/shortlist.stage`, `/api/shortlist.remove`, and `/api/shortlist.export` (CSV for Bullhorn, Recruit CRM, Manatal, Zoho Recruit, JobAdder, or JSON Resume).
+- Two more webhook events are live: `shortlist.candidate_added` and `order.new_matches`. Subscribe from code (or Zapier, Make, n8n) with `/api/webhook.subscribe`; `/api/webhook.unsubscribe`, `/api/webhook.list`, `/api/webhook.samples`.
+
 ## 0.4.1 - 2026-11-23
 
 - `match_people(vacancy=...)`: paste a vacancy's own text (a job order, a posting from anywhere); the role, technologies, level, years and work mode are read from it and `vacancy_read` says what was understood. Fields sent beside it correct what was read.

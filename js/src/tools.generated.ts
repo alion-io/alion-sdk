@@ -3409,6 +3409,191 @@ export interface SetWebhookResult {
     };
 }
 
+/** Arguments of list_orders: List your job orders */
+export interface ListOrdersArgs {
+    /** The order: the id list_orders gives (an Alion vacancy your account posted). */
+    order_id?: number;
+    status?: "live" | "paused" | "draft" | "closed" | "rejected" | "all";
+    limit?: number;
+    /** next_cursor of the previous page. */
+    cursor?: string;
+}
+
+/** Result of list_orders. */
+export interface ListOrdersResult {
+    /** The orders. */
+    items?: unknown[];
+    next_cursor?: string | null;
+    id?: number | null;
+    title?: string | null;
+    stages?: unknown;
+    /** Quota and credit standing after this call. */
+    meta?: {
+        /** anonymous, free, pro, partner or staff */
+        tier?: string | null;
+        units_charged?: number | null;
+        used_today?: number | null;
+        day_limit?: number | null;
+        remaining_today?: number | null;
+        minute_limit?: number | null;
+        /** UTC ISO 8601 */
+        resets_at?: string | null;
+        /** Credits this call cost (1 credit = $0.10). */
+        credits_charged?: number | null;
+        /** The account balance after this call, in credits. */
+        credits_left?: number | null;
+        /**
+         * live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff,
+         * partner or free
+         */
+        billing?: string | null;
+        /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
+        free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
+        docs?: string | null;
+    };
+}
+
+/** Arguments of get_shortlist: Read the shortlist of an order */
+export interface GetShortlistArgs {
+    /** The order: the id list_orders gives (an Alion vacancy your account posted). */
+    order_id: number;
+    stage?: "new" | "screening" | "interview" | "offer" | "hired" | "rejected";
+    source?: "applied" | "sourced";
+    limit?: number;
+    /** next_cursor of the previous page. */
+    cursor?: string;
+}
+
+/** Result of get_shortlist. */
+export interface GetShortlistResult {
+    /** The order. */
+    order?: unknown;
+    /** The people. */
+    items?: unknown[];
+    /** People no longer open to your account. */
+    hidden?: number | null;
+    next_cursor?: string | null;
+    note?: string | null;
+    /** Quota and credit standing after this call. */
+    meta?: {
+        /** anonymous, free, pro, partner or staff */
+        tier?: string | null;
+        units_charged?: number | null;
+        used_today?: number | null;
+        day_limit?: number | null;
+        remaining_today?: number | null;
+        minute_limit?: number | null;
+        /** UTC ISO 8601 */
+        resets_at?: string | null;
+        /** Credits this call cost (1 credit = $0.10). */
+        credits_charged?: number | null;
+        /** The account balance after this call, in credits. */
+        credits_left?: number | null;
+        /**
+         * live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff,
+         * partner or free
+         */
+        billing?: string | null;
+        /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
+        free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
+        docs?: string | null;
+    };
+}
+
+/** Arguments of add_to_shortlist: Add a person to an order */
+export interface AddToShortlistArgs {
+    /** The order: the id list_orders gives (an Alion vacancy your account posted). */
+    order_id: number;
+    /** The person: person_id (p_...), their Alion handle or an alion.io/user/<handle> link. */
+    person: string;
+}
+
+/** Result of add_to_shortlist. */
+export interface AddToShortlistResult {
+    order_id?: number | null;
+    person_id?: string | null;
+    person?: string | null;
+    added?: boolean | null;
+    stage?: string | null;
+    match_percent?: number | null;
+    /** Quota and credit standing after this call. */
+    meta?: {
+        /** anonymous, free, pro, partner or staff */
+        tier?: string | null;
+        units_charged?: number | null;
+        used_today?: number | null;
+        day_limit?: number | null;
+        remaining_today?: number | null;
+        minute_limit?: number | null;
+        /** UTC ISO 8601 */
+        resets_at?: string | null;
+        /** Credits this call cost (1 credit = $0.10). */
+        credits_charged?: number | null;
+        /** The account balance after this call, in credits. */
+        credits_left?: number | null;
+        /**
+         * live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff,
+         * partner or free
+         */
+        billing?: string | null;
+        /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
+        free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
+        docs?: string | null;
+    };
+}
+
+/** Arguments of move_on_shortlist: Move a person on a shortlist */
+export interface MoveOnShortlistArgs {
+    /** The order: the id list_orders gives (an Alion vacancy your account posted). */
+    order_id: number;
+    /** The person: person_id (p_...), their Alion handle or an alion.io/user/<handle> link. */
+    person: string;
+    stage?: "new" | "screening" | "interview" | "offer" | "hired" | "rejected";
+    /** Remove a person you added instead of moving them. */
+    remove?: boolean;
+}
+
+/** Result of move_on_shortlist. */
+export interface MoveOnShortlistResult {
+    order_id?: number | null;
+    person_id?: string | null;
+    stage?: string | null;
+    was?: string | null;
+    removed?: boolean | null;
+    /** Quota and credit standing after this call. */
+    meta?: {
+        /** anonymous, free, pro, partner or staff */
+        tier?: string | null;
+        units_charged?: number | null;
+        used_today?: number | null;
+        day_limit?: number | null;
+        remaining_today?: number | null;
+        minute_limit?: number | null;
+        /** UTC ISO 8601 */
+        resets_at?: string | null;
+        /** Credits this call cost (1 credit = $0.10). */
+        credits_charged?: number | null;
+        /** The account balance after this call, in credits. */
+        credits_left?: number | null;
+        /**
+         * live (charged), free_daily (a compact read of the daily allowance), preview (metered, not charged yet), staff,
+         * partner or free
+         */
+        billing?: string | null;
+        /** Compact reads still free today for an assistant connected through OAuth (Claude, ChatGPT) */
+        free_reads_left_today?: number | null;
+        /** People tools: the code of this account and UTC day; every list of people read today carries it */
+        mark?: string | null;
+        docs?: string | null;
+    };
+}
+
 /** Arguments of watch_search: Watch a search for new results */
 export interface WatchSearchArgs {
     /**
@@ -3901,6 +4086,10 @@ export type ToolName =
     | "agent_status"
     | "verify_company"
     | "set_webhook"
+    | "list_orders"
+    | "get_shortlist"
+    | "add_to_shortlist"
+    | "move_on_shortlist"
     | "watch_search"
     | "check_watch"
     | "list_watches"
@@ -3943,6 +4132,10 @@ export interface ToolMap {
     agent_status: { args: AgentStatusArgs; result: AgentStatusResult };
     verify_company: { args: VerifyCompanyArgs; result: VerifyCompanyResult };
     set_webhook: { args: SetWebhookArgs; result: SetWebhookResult };
+    list_orders: { args: ListOrdersArgs; result: ListOrdersResult };
+    get_shortlist: { args: GetShortlistArgs; result: GetShortlistResult };
+    add_to_shortlist: { args: AddToShortlistArgs; result: AddToShortlistResult };
+    move_on_shortlist: { args: MoveOnShortlistArgs; result: MoveOnShortlistResult };
     watch_search: { args: WatchSearchArgs; result: WatchSearchResult };
     check_watch: { args: CheckWatchArgs; result: CheckWatchResult };
     list_watches: { args: ListWatchesArgs; result: ListWatchesResult };
@@ -3959,12 +4152,12 @@ export interface ToolMap {
 }
 
 /** Tools that page with next_cursor / cursor. */
-export type PagedToolName = "search_jobs" | "search_companies" | "search_investors" | "search_company_events" | "search_contracts" | "search_people" | "match_people";
+export type PagedToolName = "search_jobs" | "search_companies" | "search_investors" | "search_company_events" | "search_contracts" | "search_people" | "match_people" | "list_orders" | "get_shortlist";
 
-export const PAGED_TOOLS: readonly PagedToolName[] = ["search_jobs","search_companies","search_investors","search_company_events","search_contracts","search_people","match_people"];
+export const PAGED_TOOLS: readonly PagedToolName[] = ["search_jobs","search_companies","search_investors","search_company_events","search_contracts","search_people","match_people","list_orders","get_shortlist"];
 
 /** Tools that only read: safe to retry after a server error. */
-export const READ_ONLY_TOOLS: ReadonlySet<string> = new Set(["search_jobs","get_job","resolve_company","search_companies","similar_companies","get_company","market_stats","get_index","search_investors","get_investor","get_company_money","get_company_ownership","get_company_record","search_company_events","search_contracts","search_people","match_people","similar_people","get_person","check_fit","get_conversation","list_conversations","agent_status","list_watches","my_matches","check_counterparty","get_agent"]);
+export const READ_ONLY_TOOLS: ReadonlySet<string> = new Set(["search_jobs","get_job","resolve_company","search_companies","similar_companies","get_company","market_stats","get_index","search_investors","get_investor","get_company_money","get_company_ownership","get_company_record","search_company_events","search_contracts","search_people","match_people","similar_people","get_person","check_fit","get_conversation","list_conversations","agent_status","list_orders","get_shortlist","list_watches","my_matches","check_counterparty","get_agent"]);
 
 /** The tool methods; Alion implements call(). */
 export abstract class AlionTools {
@@ -4336,6 +4529,46 @@ export abstract class AlionTools {
      */
     setWebhook(args: SetWebhookArgs, options?: CallOptions): Promise<SetWebhookResult> {
         return this.call("set_webhook", args ?? {}, options);
+    }
+
+    /**
+     * Your job orders: the vacancies your account posted on Alion, newest first, each with its status (live, paused,
+     * draft, closed), its links and how many people sit at each stage of its shortlist (new, screening, interview,
+     * offer, hired, rejected) and where they came from (applied, sourced). Pass order_id for one. Needs the API key
+     * of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs
+     */
+    listOrders(args?: ListOrdersArgs, options?: CallOptions): Promise<ListOrdersResult> {
+        return this.call("list_orders", args ?? {}, options);
+    }
+
+    /**
+     * The people of one job order, newest first: person_id, handle, name, headline, stage, source (applied: they
+     * applied; sourced: you added them), the fit Alion computed, the application they sent (note, asked pay), and
+     * their contacts only where they gave them to you (they applied, or shared them in Messages; never the email).
+     * Filter by stage or source. Needs the API key of the Alion account that posted the vacancies. Docs:
+     * https://alion.io/developers/docs
+     */
+    getShortlist(args: GetShortlistArgs, options?: CallOptions): Promise<GetShortlistResult> {
+        return this.call("get_shortlist", args ?? {}, options);
+    }
+
+    /**
+     * Add a person you found (search_people, match_people) to the shortlist of one of your job orders, at the stage
+     * new. The person is told they are on a shortlist; the same rules as get_person apply (people open to agents,
+     * the different people of 30 days). Adding someone already there changes nothing. Needs the API key of the Alion
+     * account that posted the vacancies. Docs: https://alion.io/developers/docs
+     */
+    addToShortlist(args: AddToShortlistArgs, options?: CallOptions): Promise<AddToShortlistResult> {
+        return this.call("add_to_shortlist", args ?? {}, options);
+    }
+
+    /**
+     * Move a person of an order's shortlist to another stage (a person who applied hears of it, as on the site), or
+     * remove one you added (remove: true; an application is the person's own - move it to rejected instead). Needs
+     * the API key of the Alion account that posted the vacancies. Docs: https://alion.io/developers/docs
+     */
+    moveOnShortlist(args: MoveOnShortlistArgs, options?: CallOptions): Promise<MoveOnShortlistResult> {
+        return this.call("move_on_shortlist", args ?? {}, options);
     }
 
     /**
